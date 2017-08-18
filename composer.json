@@ -1,0 +1,25 @@
+{
+    "name": "mez/queuejitsu",
+    "description": "A Modern Queueing System",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Martin Meredith",
+            "email": "martin@sourceguru.net"
+        }
+    ],
+    "require": {
+        "container-interop/container-interop": "^1.2",
+        "php": "^7.1",
+        "psr/log": "^1.0",
+        "zendframework/zend-eventmanager": "^3.2",
+        "ramsey/uuid": "^3.7"
+    },
+    "suggests":{
+        "predis/predis": "Connect up to Redis"
+    },
+    "require-dev": {
+        "predis/predis": "^1.1"
+    }
+}
