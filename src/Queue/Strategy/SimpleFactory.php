@@ -22,59 +22,32 @@
  * SOFTWARE.
  */
 
-namespace QueueJitsu;
+namespace QueueJitsu\Queue\Strategy;
 
+use Monolog\Logger;
+use Psr\Container\ContainerInterface;
 use Psr\Log\NullLogger;
 
 /**
- * Class ConfigProvider
+ * Class SimpleFactory
  *
- * @package QueueJitsu
+ * @package QueueJitsu\Queue\Strategy
  */
-class ConfigProvider
+class SimpleFactory
 {
     /**
      * __invoke
      *
-     * @return array
-     */
-    public function __invoke(): array
-    {
-        return [
-            'dependencies' => $this->getDependencies(),
-            'queuejitsu' => $this->getDefaultConfig(),
-        ];
-    }
-
-    /**
-     * getDependencies
+     * @param \Psr\Container\ContainerInterface $container
      *
-     * @return array
+     * @return \QueueJitsu\Queue\Strategy\Simple
      */
-    private function getDependencies()
+    public function __invoke(ContainerInterface $container)
     {
-        return [
-            'invokables' => [
-                NullLogger::class => NullLogger::class,
-            ],
-            'factories' => [
-                Job\JobManager::class => Job\JobManagerFactory::class,
-                Job\Strategy\ContainerStrategy::class => Job\Strategy\ContainerStrategyFactory::class,
-                Queue\QueueManager::class => Queue\QueueManagerFactory::class,
-                Queue\Strategy\Simple::class => Queue\Strategy\Simple::class,
-                Worker\Worker::class => Worker\WorkerFactory::class,
-                Worker\WorkerManager::class => Worker\WorkerManagerFactory::class,
-            ],
-        ];
-    }
+        $logger_class = $container->has(Logger::class) ? Logger::class : NullLogger::class;
 
-    /**
-     * getDefaultConfig
-     *
-     * @return string
-     */
-    private function getDefaultConfig()
-    {
-        return include __DIR__ . '/../config/config.php';
+        $logger = $container->get($logger_class);
+
+        return new Simple($logger);
     }
 }
