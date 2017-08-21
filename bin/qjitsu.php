@@ -42,7 +42,7 @@ if (empty($queues)) {
 $queues = explode(',', $queues);
 
 // Pretend we have a real configured container here!
-/** @var \Interop\Container\ContainerInterface $container */
+/** @var \Psr\Container\ContainerInterface $container */
 
 $worker = (new \QueueJitsu\Worker\WorkerFactory())->__invoke($container);
 
