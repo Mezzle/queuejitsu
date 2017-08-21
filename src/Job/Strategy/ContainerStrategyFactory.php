@@ -24,7 +24,7 @@
 
 namespace QueueJitsu\Job\Strategy;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class ContainerStrategyFactory
@@ -36,7 +36,7 @@ class ContainerStrategyFactory
     /**
      * __invoke
      *
-     * @param \Interop\Container\ContainerInterface $container
+     * @param \Psr\Container\ContainerInterface $container
      *
      * @return \QueueJitsu\Job\Strategy\ContainerStrategy
      */

@@ -10,11 +10,11 @@
         }
     ],
     "require": {
-        "container-interop/container-interop": "^1.2",
         "php": "^7.1",
         "psr/log": "^1.0",
         "zendframework/zend-eventmanager": "^3.2",
-        "ramsey/uuid": "^3.7"
+        "ramsey/uuid": "^3.7",
+        "psr/container": "^1.0"
     },
     "suggests":{
         "predis/predis": "Connect up to Redis"

@@ -24,7 +24,7 @@
 
 namespace QueueJitsu\Queue;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface as Logger;
 use Psr\Log\NullLogger;
 use QueueJitsu\Queue\Adapter\AdapterInterface;
@@ -41,7 +41,7 @@ class QueueManagerFactory
     /**
      * __invoke
      *
-     * @param \Interop\Container\ContainerInterface $container
+     * @param \Psr\Container\ContainerInterface $container
      *
      * @return \Closure
      *

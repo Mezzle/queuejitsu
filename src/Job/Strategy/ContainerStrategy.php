@@ -24,7 +24,7 @@
 
 namespace QueueJitsu\Job\Strategy;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class ContainerStrategy
@@ -34,14 +34,14 @@ use Interop\Container\ContainerInterface;
 class ContainerStrategy implements StrategyInterface
 {
     /**
-     * @var \Interop\Container\ContainerInterface $container
+     * @var \Psr\Container\ContainerInterface $container
      */
     private $container;
 
     /**
      * ContainerStrategy constructor.
      *
-     * @param \Interop\Container\ContainerInterface $container
+     * @param \Psr\Container\ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {

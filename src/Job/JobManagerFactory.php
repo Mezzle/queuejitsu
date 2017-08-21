@@ -24,7 +24,7 @@
 
 namespace QueueJitsu\Job;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use QueueJitsu\Job\Adapter\AdapterInterface;
@@ -41,7 +41,7 @@ class JobManagerFactory
     /**
      * __invoke
      *
-     * @param \Interop\Container\ContainerInterface $container
+     * @param \Psr\Container\ContainerInterface $container
      *
      * @return \QueueJitsu\Job\JobManager
      *
