@@ -61,7 +61,7 @@ class ConfigProvider
                 Job\JobManager::class => Job\JobManagerFactory::class,
                 Job\Strategy\ContainerStrategy::class => Job\Strategy\ContainerStrategyFactory::class,
                 Queue\QueueManager::class => Queue\QueueManagerFactory::class,
-                Queue\Strategy\Simple::class => Queue\Strategy\Simple::class,
+                Queue\Strategy\Simple::class => Queue\Strategy\SimpleFactory::class,
                 Worker\Worker::class => Worker\WorkerFactory::class,
                 Worker\WorkerManager::class => Worker\WorkerManagerFactory::class,
             ],
