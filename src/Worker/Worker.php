@@ -113,16 +113,14 @@ class Worker implements EventManagerAwareInterface
         WorkerManager $manager,
         JobManager $job_manager
     ) {
-        $this->hostname = gethostname();
-
-        $this->worker_name = sprintf('%s:%d', $this->hostname, getmypid());
-
-        $this->id = sprintf('%s:%s', $this->worker_name, $this->getQueueString());
-
-        $this->log = $log;
         $this->queue_manager = $queue_manager;
+        $this->log = $log;
         $this->manager = $manager;
         $this->job_manager = $job_manager;
+
+        $this->hostname = gethostname();
+        $this->worker_name = sprintf('%s:%d', $this->hostname, getmypid());
+        $this->id = sprintf('%s:%s', $this->worker_name, $this->getQueueString());
     }
 
     /**
@@ -167,7 +165,7 @@ class Worker implements EventManagerAwareInterface
 
             $this->log->info(sprintf('got Job %s', $job->getId()));
 
-            $this->events->trigger('beforeFork', $job);
+            $this->getEventManager()->trigger('beforeFork', $job);
             $this->setWorkingOn($job);
 
             $this->child = $this->fork();
@@ -209,7 +207,7 @@ class Worker implements EventManagerAwareInterface
         $this->registerSignalHandlers();
         $this->pruneDeadWorkers();
 
-        $this->events->trigger('beforeFirstFork', $this);
+        $this->getEventManager()->trigger('beforeFirstFork', $this);
         $this->manager->registerWorker($this->id);
     }
 

@@ -101,12 +101,12 @@ class JobManager implements EventManagerAwareInterface
      */
     public function run(Job $job)
     {
-        $this->events->trigger('afterFork', $job);
+        $this->getEventManager()->trigger('afterFork', $job);
 
         try {
             $jobInstance = $this->strategy->getJobInstance($job->getClass());
 
-            $this->events->trigger('beforePerform', $job);
+            $this->getEventManager()->trigger('beforePerform', $job);
 
             if (method_exists($jobInstance, 'setUp')) {
                 $jobInstance->setUp();
@@ -120,7 +120,7 @@ class JobManager implements EventManagerAwareInterface
                 $jobInstance->tearDown();
             }
 
-            $this->events->trigger('afterPerform', $job);
+            $this->getEventManager()->trigger('afterPerform', $job);
         } catch (DontPerform $e) {
             $this->log->debug(sprintf('Job %s triggered a DontPerform', $job->getId()));
             // Don't Perform this job triggered
@@ -150,7 +150,7 @@ class JobManager implements EventManagerAwareInterface
      */
     public function failJob(Job $job, Throwable $e)
     {
-        $this->events->trigger('onFailure', $job, [$e]);
+        $this->getEventManager()->trigger('onFailure', $job, [$e]);
 
         $this->updateStatus($job, self::STATUS_FAILED);
 
