@@ -84,6 +84,6 @@ class ConfigProvider
      */
     private function getDefaultConfig()
     {
-        return __DIR__ . '/../config/config.php';
+        return include __DIR__ . '/../config/config.php';
     }
 }
