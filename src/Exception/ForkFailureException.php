@@ -33,5 +33,4 @@ use RuntimeException;
  */
 class ForkFailureException extends RuntimeException
 {
-
 }

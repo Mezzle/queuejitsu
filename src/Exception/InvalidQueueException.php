@@ -33,5 +33,4 @@ use InvalidArgumentException;
  */
 class InvalidQueueException extends InvalidArgumentException
 {
-
 }

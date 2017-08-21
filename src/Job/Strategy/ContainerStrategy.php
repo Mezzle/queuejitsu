@@ -54,10 +54,11 @@ class ContainerStrategy implements StrategyInterface
      * @param string $class
      *
      * @return Callable
+     *
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function getJobInstance(string $class): Callable
+    public function getJobInstance(string $class): callable
     {
         return $this->container->get($class);
     }

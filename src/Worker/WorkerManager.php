@@ -65,7 +65,6 @@ class WorkerManager
 
     /**
      * pruneDeadWorkers
-     *
      */
     public function pruneDeadWorkers(): void
     {
@@ -124,7 +123,6 @@ class WorkerManager
 
     /**
      * reestablishConnection
-     *
      */
     public function reestablishConnection()
     {
@@ -152,5 +150,4 @@ class WorkerManager
         $this->adapter->increaseWorkerProcessedCount($worker);
         $this->adapter->clearJob($worker);
     }
-
 }

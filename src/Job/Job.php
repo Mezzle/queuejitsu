@@ -150,6 +150,5 @@ class Job
             'class' => $this->class,
             'args' => $this->args,
         ];
-
     }
 }

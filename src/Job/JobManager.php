@@ -101,7 +101,6 @@ class JobManager implements EventManagerAwareInterface
      */
     public function run(Job $job)
     {
-        $start_time = microtime(true);
         $this->events->trigger('afterFork', $job);
 
         try {
@@ -123,7 +122,7 @@ class JobManager implements EventManagerAwareInterface
 
             $this->events->trigger('afterPerform', $job);
         } catch (DontPerform $e) {
-            $this->log->debug(sprintf('Job %s triggered a DontPerform'), $job->getId());
+            $this->log->debug(sprintf('Job %s triggered a DontPerform', $job->getId()));
             // Don't Perform this job triggered
         } catch (Throwable $e) {
             $this->log->error(

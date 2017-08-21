@@ -38,5 +38,5 @@ interface StrategyInterface
      *
      * @return Callable
      */
-    public function getJobInstance(string $class): Callable;
+    public function getJobInstance(string $class): callable;
 }
