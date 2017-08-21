@@ -21,9 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 use QueueJitsu\Queue\Adapter\RedisAdapter;
 
 return [
-    'adapter' => RedisAdapter::class
+    'adapter' => RedisAdapter::class,
 ];

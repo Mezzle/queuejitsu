@@ -24,7 +24,7 @@
 
 namespace QueueJitsu\Worker;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface as Logger;
 use Psr\Log\NullLogger;
 use QueueJitsu\Job\JobManager;
@@ -40,7 +40,7 @@ class WorkerFactory
     /**
      * __invoke
      *
-     * @param \Interop\Container\ContainerInterface $container
+     * @param \Psr\Container\ContainerInterface $container
      *
      * @return \Closure
      *
@@ -56,7 +56,7 @@ class WorkerFactory
         $queue_manager_factory = $container->get(QueueManager::class);
         $worker_manager = $container->get(WorkerManager::class);
 
-        return function($queues) use ($logger, $job_manager, $queue_manager_factory, $worker_manager) {
+        return function ($queues) use ($logger, $job_manager, $queue_manager_factory, $worker_manager) {
             $queue_manager = $queue_manager_factory($queues);
 
             return new Worker($logger, $queue_manager, $worker_manager, $job_manager);

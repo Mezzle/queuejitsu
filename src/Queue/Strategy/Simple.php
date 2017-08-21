@@ -48,7 +48,7 @@ class Simple implements StrategyInterface
     /**
      * reserve
      *
-     * @param array $queues
+     * @param string[] $queues
      * @param \QueueJitsu\Queue\Adapter\AdapterInterface $adapter
      *
      * @return null|\QueueJitsu\Job\Job
@@ -59,7 +59,6 @@ class Simple implements StrategyInterface
             $queues = $adapter->getAllQueueNames();
         }
 
-        /** @var \QueueJitsu\Queue\Adapter\AdapterInterface $queue */
         foreach ($queues as $queue) {
             $this->log->debug(sprintf('Checking %s', $queue));
 

@@ -33,5 +33,4 @@ use RuntimeException;
  */
 class DontPerform extends RuntimeException
 {
-
 }

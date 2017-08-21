@@ -42,7 +42,6 @@ class RedisAdapter implements AdapterInterface
      */
     public function __construct(Client $client)
     {
-
         $this->client = $client;
     }
 
@@ -64,7 +63,6 @@ class RedisAdapter implements AdapterInterface
 
     /**
      * reestablishConnection
-     *
      */
     public function reestablishConnection(): void
     {
@@ -116,7 +114,6 @@ class RedisAdapter implements AdapterInterface
         $worker_started = sprintf('%s:started', $worker_key);
         $this->client->del([$worker_key, $worker_started]);
         $this->deleteStats($id);
-
     }
 
     /**
@@ -133,7 +130,6 @@ class RedisAdapter implements AdapterInterface
 
     /**
      * increaseProcessedCount
-     *
      */
     public function increaseProcessedCount(): void
     {

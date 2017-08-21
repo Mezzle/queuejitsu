@@ -24,7 +24,7 @@
 
 namespace QueueJitsu\Job\Strategy;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class ContainerStrategy
@@ -34,14 +34,14 @@ use Interop\Container\ContainerInterface;
 class ContainerStrategy implements StrategyInterface
 {
     /**
-     * @var \Interop\Container\ContainerInterface $container
+     * @var \Psr\Container\ContainerInterface $container
      */
     private $container;
 
     /**
      * ContainerStrategy constructor.
      *
-     * @param \Interop\Container\ContainerInterface $container
+     * @param \Psr\Container\ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
@@ -54,10 +54,11 @@ class ContainerStrategy implements StrategyInterface
      * @param string $class
      *
      * @return Callable
+     *
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function getJobInstance(string $class): Callable
+    public function getJobInstance(string $class): callable
     {
         return $this->container->get($class);
     }

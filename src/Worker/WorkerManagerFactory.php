@@ -24,7 +24,7 @@
 
 namespace QueueJitsu\Worker;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface as Logger;
 use Psr\Log\NullLogger;
 use QueueJitsu\Worker\Adapter\AdapterInterface;
@@ -34,9 +34,10 @@ class WorkerManagerFactory
     /**
      * __invoke
      *
-     * @param \Interop\Container\ContainerInterface $container
+     * @param \Psr\Container\ContainerInterface $container
      *
      * @return \QueueJitsu\Worker\WorkerManager
+     *
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */

@@ -48,13 +48,12 @@ interface AdapterInterface
      *
      * @return null|\QueueJitsu\Job\Job
      */
-    public function reserve(string $queue): ?Job;
+    public function reserve(string $queue): ? Job;
 
     /**
      * reestablishConnection
-     *
      */
-    public function reestablishConnection():void;
+    public function reestablishConnection() : void;
 
     /**
      * getAllQueueNames

@@ -65,7 +65,6 @@ class WorkerManager
 
     /**
      * pruneDeadWorkers
-     *
      */
     public function pruneDeadWorkers(): void
     {
@@ -73,7 +72,7 @@ class WorkerManager
         $workers = $this->getAllWorkerIds();
 
         foreach ($workers as $worker) {
-            list ($host, $pid) = explode(':', $worker, 3);
+            [$host, $pid] = explode(':', $worker, 3);
 
             if ($host != $this->hostname || in_array($pid, $local_pids) || $pid == getmypid()) {
                 continue;
@@ -95,7 +94,8 @@ class WorkerManager
         exec('ps -A -o pid,comm | grep [q]jitsu', $output);
 
         foreach ($output as $line) {
-            list($pids[]) = explode(' ', trim($line), 2);
+            [$pid] = explode(' ', trim($line), 2);
+            $pids[] = $pid;
         }
 
         return $pids;
@@ -123,7 +123,6 @@ class WorkerManager
 
     /**
      * reestablishConnection
-     *
      */
     public function reestablishConnection()
     {
@@ -151,5 +150,4 @@ class WorkerManager
         $this->adapter->increaseWorkerProcessedCount($worker);
         $this->adapter->clearJob($worker);
     }
-
 }

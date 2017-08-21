@@ -42,5 +42,5 @@ interface StrategyInterface
      *
      * @return null|\QueueJitsu\Job\Job
      */
-    public function reserve(array $queues, AdapterInterface $adapter): ?Job;
+    public function reserve(array $queues, AdapterInterface $adapter): ? Job;
 }

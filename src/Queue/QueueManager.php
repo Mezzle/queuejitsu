@@ -57,7 +57,6 @@ class QueueManager
      * @param string[] $queues
      * @param \QueueJitsu\Queue\Strategy\StrategyInterface $strategy
      * @param \Psr\Log\LoggerInterface $log
-     *
      * @param \QueueJitsu\Queue\Adapter\AdapterInterface $adapter
      *
      * @throws \QueueJitsu\Exception\InvalidQueueException
@@ -89,14 +88,13 @@ class QueueManager
      *
      * @return null|\QueueJitsu\Job\Job
      */
-    public function reserve(): ?Job
+    public function reserve(): ? Job
     {
         return $this->strategy->reserve($this->queues, $this->adapter);
     }
 
     /**
      * reestablishConnection
-     *
      */
     public function reestablishConnection()
     {

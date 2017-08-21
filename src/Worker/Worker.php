@@ -1,4 +1,5 @@
 <?php
+
 declare(ticks=1);
 /**
  * Copyright (c) 2017 Martin Meredith
@@ -44,7 +45,7 @@ class Worker implements EventManagerAwareInterface
     use EventManagerAwareTrait;
 
     /**
-     * @var null|int $child
+     * @var bool|null|int $child
      */
     private $child = null;
 
@@ -151,7 +152,6 @@ class Worker implements EventManagerAwareInterface
                 break;
             }
 
-            /** @var Job|null $job */
             $job = $this->getJob();
 
             if (!$job) {
@@ -201,7 +201,6 @@ class Worker implements EventManagerAwareInterface
 
     /**
      * startup
-     *
      */
     private function startup()
     {
@@ -242,9 +241,8 @@ class Worker implements EventManagerAwareInterface
 
     /**
      * pruneDeadWorkers
-     *
      */
-    private function pruneDeadWorkers()
+    private function pruneDeadWorkers(): void
     {
         $this->manager->pruneDeadWorkers();
     }
@@ -252,11 +250,11 @@ class Worker implements EventManagerAwareInterface
     /**
      * getJob
      *
-     * @return mixed
+     * @return null|\QueueJitsu\Job\Job
      */
-    private function getJob()
+    private function getJob(): ? Job
     {
-        $job = false;
+        $job = null;
 
         if (!$this->paused) {
             $job = $this->queue_manager->reserve();
@@ -283,7 +281,7 @@ class Worker implements EventManagerAwareInterface
      *
      * @return string
      */
-    public function getId()
+    public function getId() : string
     {
         return $this->id;
     }
@@ -308,97 +306,6 @@ class Worker implements EventManagerAwareInterface
         }
 
         return $pid;
-    }
-
-    /**
-     * finishedWorking
-     *
-     */
-    private function finishedWorking()
-    {
-        $this->current_job = null;
-        $this->manager->finishedWorking($this);
-    }
-
-    /**
-     * shutdownNow
-     *
-     */
-    public function shutdownNow(): void
-    {
-        $this->log->warning('Forced Shutdown Started');
-        $this->shutdown();
-        $this->killChild();
-    }
-
-    /**
-     * shutdown
-     *
-     */
-    public function shutdown(): void
-    {
-        $this->finish = true;
-        $this->log->info('Exiting...');
-    }
-
-    /**
-     * killChild
-     *
-     */
-    public function killChild(): void
-    {
-        if (is_null($this->child)) {
-            $this->log->debug('No child to kill');
-
-            return;
-        }
-
-        $this->log->debug(sprintf('Finding child at %d'), $this->child);
-
-        // Check if pid is running
-        $executed = exec(sprintf('ps -o pid,state -p %d', $this->child), $output, $return_code);
-
-        if ($executed && $return_code != 1) {
-            $this->log->debug(sprintf('Killing child at %d'), $this->child);
-            posix_kill($this->child, SIGKILL);
-            $this->child = null;
-
-            return;
-        }
-
-        $this->log->error(sprintf('Child %d not found, restarting', $this->child));
-        $this->shutdown();
-    }
-
-    /**
-     * pauseProcessing
-     *
-     */
-    public function pauseProcessing(): void
-    {
-        $this->log->info('USR2 received; pausing job processing');
-        $this->paused = true;
-    }
-
-    /**
-     * continueProcessing
-     *
-     */
-    public function continueProcessing(): void
-    {
-        $this->log->info('CONT received; resuming job processing');
-        $this->paused = false;
-    }
-
-    /**
-     * reestablishConnection
-     *
-     */
-    public function reestablishConnection(): void
-    {
-        $this->log->info('SIGPIPE received - attempting to reconnect');
-        $this->queue_manager->reestablishConnection();
-        $this->manager->reestablishConnection();
     }
 
     /**
@@ -450,5 +357,89 @@ class Worker implements EventManagerAwareInterface
                 )
             );
         }
+    }
+
+    /**
+     * finishedWorking
+     */
+    private function finishedWorking(): void
+    {
+        $this->current_job = null;
+        $this->manager->finishedWorking($this);
+    }
+
+    /**
+     * shutdownNow
+     */
+    public function shutdownNow(): void
+    {
+        $this->log->warning('Forced Shutdown Started');
+        $this->shutdown();
+        $this->killChild();
+    }
+
+    /**
+     * shutdown
+     */
+    public function shutdown(): void
+    {
+        $this->finish = true;
+        $this->log->info('Exiting...');
+    }
+
+    /**
+     * killChild
+     */
+    public function killChild(): void
+    {
+        if (is_null($this->child)) {
+            $this->log->debug('No child to kill');
+
+            return;
+        }
+
+        $this->log->debug(sprintf('Finding child at %d', $this->child));
+
+        // Check if pid is running
+        $executed = exec(sprintf('ps -o pid,state -p %d', $this->child), $output, $return_code);
+
+        if ($executed && $return_code != 1) {
+            $this->log->debug(sprintf('Killing child at %d', $this->child));
+            posix_kill($this->child, SIGKILL);
+            $this->child = null;
+
+            return;
+        }
+
+        $this->log->error(sprintf('Child %d not found, restarting', $this->child));
+        $this->shutdown();
+    }
+
+    /**
+     * pauseProcessing
+     */
+    public function pauseProcessing(): void
+    {
+        $this->log->info('USR2 received; pausing job processing');
+        $this->paused = true;
+    }
+
+    /**
+     * continueProcessing
+     */
+    public function continueProcessing(): void
+    {
+        $this->log->info('CONT received; resuming job processing');
+        $this->paused = false;
+    }
+
+    /**
+     * reestablishConnection
+     */
+    public function reestablishConnection(): void
+    {
+        $this->log->info('SIGPIPE received - attempting to reconnect');
+        $this->queue_manager->reestablishConnection();
+        $this->manager->reestablishConnection();
     }
 }
