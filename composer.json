@@ -21,7 +21,8 @@
     },
     "suggest": {
         "predis/predis": "Connect up to Redis",
-        "ext-pcntl": "Allows background working"
+        "ext-pcntl": "Allows Workers to be ran in forked processes",
+        "mez/queuejitsu-cli": "Command Line integration"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "~2",
