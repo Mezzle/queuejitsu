@@ -91,7 +91,7 @@ class WorkerManager
     public function getLocalWorkerPids(): array
     {
         $pids = [];
-        exec('ps -A -o pid,comm | grep [q]jitsu', $output);
+        exec('ps -A -o pid,args | grep "[q]jitsu"', $output);
 
         foreach ($output as $line) {
             [$pid] = explode(' ', trim($line), 2);

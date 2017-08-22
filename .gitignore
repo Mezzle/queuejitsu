@@ -1,3 +1,4 @@
 /vendor/
 /composer.lock
 /sonar-project.properties
+.php_cs.cache

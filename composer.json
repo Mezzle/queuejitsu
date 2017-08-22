@@ -9,25 +9,29 @@
             "email": "martin@sourceguru.net"
         }
     ],
+    "config": {
+        "sort-packages": true
+    },
     "require": {
         "php": "^7.1",
+        "psr/container": "^1.0",
         "psr/log": "^1.0",
-        "zendframework/zend-eventmanager": "^3.2",
         "ramsey/uuid": "^3.7",
-        "psr/container": "^1.0"
+        "zendframework/zend-eventmanager": "^3.2"
     },
     "suggest": {
-        "predis/predis": "Connect up to Redis"
+        "predis/predis": "Connect up to Redis",
+        "ext-pcntl": "Allows background working"
     },
     "require-dev": {
-        "predis/predis": "^1.1",
-        "phpro/grumphp": "^0.11.6",
-        "friendsofphp/php-cs-fixer": "~1",
+        "friendsofphp/php-cs-fixer": "~2",
         "jakub-onderka/php-parallel-lint": "^0.9.2",
         "nikic/php-parser": "^3.1",
         "phpmd/phpmd": "^2.6",
+        "phpro/grumphp": "^0.11.6",
         "phpstan/phpstan": "^0.8.3",
         "povils/phpmnd": "^1.1",
+        "predis/predis": "^1.1",
         "sebastian/phpcpd": "^3.0",
         "sensiolabs/security-checker": "^4.1",
         "squizlabs/php_codesniffer": "^3.0"

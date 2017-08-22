@@ -10,52 +10,68 @@ parameters:
       - src/OfflineAds/src/Migrations
       - test
       - data
-    phpcsfixer:
-      level: psr2
-      fixers:
-        - trailing_spaces
-        - array_element_no_space_before_comma
-        - array_element_white_space_after_comma
-        - blankline_after_open_tag
-        - double_arrow_multiline_whitespaces
-        - duplicate_semicolon
-        - empty_return
-        - extra_empty_lines
-        - function_typehint_space
-        - include
-        - join_function
-        - list_commas
-        - multiline_array_trailing_comma
-        - namespace_no_leading_whitespace
-        - new_with_braces
-        - no_blank_lines_after_class_opening
-        - no_empty_lines_after_phpdocs
-        - object_operator
-        - operators_spaces
-        - phpdoc_indent
-        - phpdoc_no_access
-        - phpdoc_no_empty_return
-        - phpdoc_scalar
-        - phpdoc_separation
-        - phpdoc_trim
-        - remove_leading_slash_use
-        - remove_lines_between_uses
-        - return
-        - self_accessor
-        - short_bool_cast
-        - single_array_no_trailing_comma
-        - single_blank_line_before_namespace
-        - single_quote
-        - spaces_before_semicolon
-        - ternary_spaces
-        - trim_array_spaces
-        - unused_use
-        - whitespacy_lines
-        - concat_with_spaces
-        - multiline_spaces_before_semicolon
-        - newline_after_open_tag
-        - ordered_use
-        - short_array_syntax
+    phpcsfixer2:
+      rules:
+        "@PSR2": true
+        array_syntax:
+          syntax: short
+        binary_operator_spaces: ~
+        blank_line_before_return: ~
+        cast_spaces:
+          space: none
+        concat_space:
+          spacing: one
+        function_typehint_space: ~
+        include: ~
+        linebreak_after_opening_tag: ~
+        list_syntax:
+          syntax: short
+        mb_str_functions: ~
+        method_separation: ~
+        native_function_casing: ~
+        new_with_braces: ~
+        no_blank_lines_after_class_opening: ~
+        no_blank_lines_after_phpdoc: ~
+        no_empty_comment: ~
+        no_empty_phpdoc: ~
+        no_extra_consecutive_blank_lines: ~
+        no_leading_import_slash: ~
+        no_leading_namespace_whitespace: ~
+        no_mixed_echo_print: ~
+        no_multiline_whitespace_before_semicolons: ~
+        no_null_property_initialization: ~
+        no_php4_constructor: ~
+        no_short_bool_cast: ~
+        no_short_echo_tag: ~
+        no_trailing_comma_in_singleline_array: ~
+        no_useless_else: ~
+        no_useless_return: ~
+        no_whitespace_before_comma_in_array: ~
+        no_whitespace_in_blank_line: ~
+        normalize_index_brace: ~
+        object_operator_without_whitespace: ~
+        ordered_imports: ~
+        phpdoc_add_missing_param_annotation: ~
+        phpdoc_indent: ~
+        phpdoc_no_empty_return: ~
+        phpdoc_order: ~
+        phpdoc_scalar: ~
+        phpdoc_return_self_reference: ~
+        phpdoc_types_order: ~
+        pow_to_exponentiation: ~
+        protected_to_private: ~
+        self_accessor: ~
+        return_type_declaration: ~
+        semicolon_after_instruction: ~
+        short_scalar_cast: ~
+        single_blank_line_before_namespace: ~
+        single_quote: ~
+        space_after_semicolon: ~
+        standardize_not_equals: ~
+        ternary_operator_spaces: ~
+        ternary_to_null_coalescing: ~
+        trailing_comma_in_multiline_array: ~
+        trim_array_spaces: ~
     phplint: ~
     phpmd:
       exclude:
