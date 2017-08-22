@@ -43,5 +43,10 @@
                 "src"
             ]
         }
+    },
+    "extra": {
+        "zf": {
+            "config-provider": "QueueJitsu\\ConfigProvider"
+        }
     }
 }
