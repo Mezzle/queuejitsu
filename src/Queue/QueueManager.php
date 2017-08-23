@@ -29,6 +29,11 @@ use QueueJitsu\Job\Job;
 use QueueJitsu\Queue\Adapter\AdapterInterface;
 use QueueJitsu\Queue\Strategy\StrategyInterface;
 
+/**
+ * Class QueueManager
+ *
+ * @package QueueJitsu\Queue
+ */
 class QueueManager
 {
     /**
@@ -91,13 +96,5 @@ class QueueManager
     public function reserve(): ? Job
     {
         return $this->strategy->reserve($this->queues, $this->adapter);
-    }
-
-    /**
-     * reestablishConnection
-     */
-    public function reestablishConnection()
-    {
-        $this->adapter->reestablishConnection();
     }
 }

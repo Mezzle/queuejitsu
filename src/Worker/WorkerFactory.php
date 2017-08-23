@@ -59,7 +59,7 @@ class WorkerFactory
         return function ($queues) use ($logger, $job_manager, $queue_manager_factory, $worker_manager) {
             $queue_manager = $queue_manager_factory($queues);
 
-            return new Worker($logger, $queue_manager, $worker_manager, $job_manager);
+            return new Worker($logger, $worker_manager, $queue_manager, $job_manager);
         };
     }
 }

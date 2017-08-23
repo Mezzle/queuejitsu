@@ -29,6 +29,11 @@ use Psr\Log\LoggerInterface as Logger;
 use Psr\Log\NullLogger;
 use QueueJitsu\Worker\Adapter\AdapterInterface;
 
+/**
+ * Class WorkerManagerFactory
+ *
+ * @package QueueJitsu\Worker
+ */
 class WorkerManagerFactory
 {
     /**

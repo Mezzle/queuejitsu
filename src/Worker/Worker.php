@@ -28,26 +28,17 @@ namespace QueueJitsu\Worker;
 
 use Psr\Log\LoggerInterface;
 use QueueJitsu\Exception\DirtyExitException;
-use QueueJitsu\Exception\ForkFailureException;
 use QueueJitsu\Job\Job;
 use QueueJitsu\Job\JobManager;
 use QueueJitsu\Queue\QueueManager;
-use Zend\EventManager\EventManagerAwareInterface;
-use Zend\EventManager\EventManagerAwareTrait;
 
 /**
  * Class Worker
  *
  * @package QueueJitsu\Worker
  */
-class Worker implements EventManagerAwareInterface
+class Worker extends AbstractWorker
 {
-    use EventManagerAwareTrait;
-
-    /**
-     * @var bool|null|int $child
-     */
-    private $child = null;
 
     /**
      * @var Job|null $current_job
@@ -55,49 +46,14 @@ class Worker implements EventManagerAwareInterface
     private $current_job;
 
     /**
-     * @var bool $finish
-     */
-    protected $finish = false;
-
-    /**
-     * @var string $hostname
-     */
-    private $hostname;
-
-    /**
-     * @var string $id
-     */
-    private $id;
-
-    /**
      * @var \QueueJitsu\Job\JobManager $job_manager
      */
     protected $job_manager;
 
     /**
-     * @var \Psr\Log\LoggerInterface $log
-     */
-    protected $log;
-
-    /**
-     * @var \QueueJitsu\Worker\WorkerManager $manager
-     */
-    protected $manager;
-
-    /**
-     * @var bool $paused
-     */
-    private $paused = false;
-
-    /**
      * @var \QueueJitsu\Queue\QueueManager $queue_manager
      */
     protected $queue_manager;
-
-    /**
-     * @var string $worker_name
-     */
-    private $worker_name;
 
     /**
      * Worker constructor.
@@ -109,142 +65,71 @@ class Worker implements EventManagerAwareInterface
      */
     public function __construct(
         LoggerInterface $log,
-        QueueManager $queue_manager,
         WorkerManager $manager,
+        QueueManager $queue_manager,
         JobManager $job_manager
     ) {
-        $this->queue_manager = $queue_manager;
-        $this->log = $log;
-        $this->manager = $manager;
-        $this->job_manager = $job_manager;
+        parent::__construct($log, $manager);
 
-        $this->hostname = gethostname();
-        $this->worker_name = sprintf('%s:%d', $this->hostname, getmypid());
-        $this->id = sprintf('%s:%s', $this->worker_name, $this->getQueueString());
+        $this->queue_manager = $queue_manager;
+        $this->job_manager = $job_manager;
     }
 
     /**
-     * getQueueString
+     * workingOn
      *
      * @return string
      */
-    private function getQueueString(): string
+    protected function getWorkerIdentifier(): string
     {
         return implode(',', $this->queue_manager->getQueues());
     }
 
     /**
-     * __invoke
+     * finishedWorking
      *
-     * @param int $interval
+     */
+    protected function finishedWorking(): void
+    {
+        $this->current_job = null;
+
+        parent::finishedWorking();
+    }
+
+    /**
+     * loop
      *
      * @throws \QueueJitsu\Exception\ForkFailureException
      */
-    public function __invoke($interval = 5)
+    protected function loop(): void
     {
-        $this->updateProcLine('Starting');
-        $this->startup();
+        $job = $this->getJob();
 
-        while (true) {
-            if ($this->finish) {
-                break;
-            }
+        if (!$job) {
+            $this->sleep();
 
-            $job = $this->getJob();
-
-            if (!$job) {
-                $this->log->debug(sprintf('Sleeping for %d', $interval));
-
-                $waitString = sprintf('Waiting for %s', $this->getQueueString());
-                $procline = $this->paused ? 'Paused' : $waitString;
-                $this->updateProcLine($procline);
-
-                usleep($interval * 1000000);
-                continue;
-            }
-
-            $this->log->info(sprintf('got Job %s', $job->getId()));
-
-            $this->getEventManager()->trigger('beforeFork', $job);
-            $this->setWorkingOn($job);
-
-            $this->child = $this->fork();
-
-            // We are the Child Process
-            if ($this->child === 0 || $this->child === false) {
-                $this->runAsChild($job);
-            }
-
-            // We are the parent Process
-            if ($this->child > 0) {
-                $this->runAsParent($job);
-            }
-
-            $this->child = null;
-            $this->finishedWorking();
+            return;
         }
 
-        $this->manager->unregisterWorker($this->getId());
-    }
+        $this->log->info(sprintf('got Job %s', $job->getId()));
 
-    /**
-     * updateProcLine
-     *
-     * @param string $status
-     */
-    protected function updateProcLine(string $status): void
-    {
-        if (function_exists('cli_set_process_title')) {
-            cli_set_process_title('qjitsu: ' . $status);
-        }
-    }
+        $this->getEventManager()->trigger('beforeFork', $job);
+        $this->setWorkingOn($job);
 
-    /**
-     * startup
-     */
-    protected function startup()
-    {
-        $this->log->info(sprintf('Starting worker %s', $this->id));
+        $this->child = $this->fork();
 
-        $this->registerSignalHandlers();
-        $this->pruneDeadWorkers();
-
-        $this->getEventManager()->trigger('beforeFirstFork', $this);
-        $this->manager->registerWorker($this->id);
-    }
-
-    /**
-     * registerSignalHandlers
-     *
-     * @return bool
-     */
-    private function registerSignalHandlers(): bool
-    {
-        if (!function_exists('pcntl_signal')) {
-            $this->log->warning('Signal Handling is not supported on this system');
-
-            return false;
+        // We are the Child Process
+        if ($this->child === 0 || $this->child === false) {
+            $this->runAsChild($job);
         }
 
-        pcntl_signal(SIGTERM, [$this, 'shutdownNow']);
-        pcntl_signal(SIGINT, [$this, 'shutdownNow']);
-        pcntl_signal(SIGQUIT, [$this, 'shutdown']);
-        pcntl_signal(SIGUSR1, [$this, 'killChild']);
-        pcntl_signal(SIGUSR2, [$this, 'pauseProcessing']);
-        pcntl_signal(SIGCONT, [$this, 'continueProcessing']);
-        pcntl_signal(SIGPIPE, [$this, 'reestablishConnection']);
+        // We are the parent Process
+        if ($this->child > 0) {
+            $this->runAsParent($job);
+        }
 
-        $this->log->debug('Registered Signals');
-
-        return true;
-    }
-
-    /**
-     * pruneDeadWorkers
-     */
-    private function pruneDeadWorkers(): void
-    {
-        $this->manager->pruneDeadWorkers();
+        $this->child = null;
+        $this->finishedWorking();
     }
 
     /**
@@ -252,15 +137,9 @@ class Worker implements EventManagerAwareInterface
      *
      * @return null|\QueueJitsu\Job\Job
      */
-    private function getJob(): ? Job
+    private function getJob(): ?Job
     {
-        $job = null;
-
-        if (!$this->paused) {
-            $job = $this->queue_manager->reserve();
-        }
-
-        return $job;
+        return $this->queue_manager->reserve();
     }
 
     /**
@@ -270,42 +149,17 @@ class Worker implements EventManagerAwareInterface
      */
     private function setWorkingOn(Job $job)
     {
-        $this->manager->setWorkerWorkingOn($this, $job);
+        $this->setTask(
+            [
+                'queue' => $job->getQueue(),
+                'run_at' => strftime('%a %b %d %H:%M:%S %Z %Y'),
+                'payload' => $job->getPayload(),
+            ]
+        );
+
         $this->current_job = $job;
         $job->setWorker($this->getId());
         $this->job_manager->updateStatus($job, JobManager::STATUS_RUNNING);
-    }
-
-    /**
-     * getId
-     *
-     * @return string
-     */
-    public function getId() : string
-    {
-        return $this->id;
-    }
-
-    /**
-     * fork
-     *
-     * @return bool|int
-     *
-     * @throws \QueueJitsu\Exception\ForkFailureException
-     */
-    private function fork()
-    {
-        if (!function_exists('pcntl_fork')) {
-            return false;
-        }
-
-        $pid = pcntl_fork();
-
-        if ($pid === -1) {
-            throw new ForkFailureException('Unable to for a child worker');
-        }
-
-        return $pid;
     }
 
     /**
@@ -357,89 +211,5 @@ class Worker implements EventManagerAwareInterface
                 )
             );
         }
-    }
-
-    /**
-     * finishedWorking
-     */
-    private function finishedWorking(): void
-    {
-        $this->current_job = null;
-        $this->manager->finishedWorking($this);
-    }
-
-    /**
-     * shutdownNow
-     */
-    public function shutdownNow(): void
-    {
-        $this->log->warning('Forced Shutdown Started');
-        $this->shutdown();
-        $this->killChild();
-    }
-
-    /**
-     * shutdown
-     */
-    public function shutdown(): void
-    {
-        $this->finish = true;
-        $this->log->info('Exiting...');
-    }
-
-    /**
-     * killChild
-     */
-    public function killChild(): void
-    {
-        if (is_null($this->child)) {
-            $this->log->debug('No child to kill');
-
-            return;
-        }
-
-        $this->log->debug(sprintf('Finding child at %d', $this->child));
-
-        // Check if pid is running
-        $executed = exec(sprintf('ps -o pid,state -p %d', $this->child), $output, $return_code);
-
-        if ($executed && $return_code != 1) {
-            $this->log->debug(sprintf('Killing child at %d', $this->child));
-            posix_kill($this->child, SIGKILL);
-            $this->child = null;
-
-            return;
-        }
-
-        $this->log->error(sprintf('Child %d not found, restarting', $this->child));
-        $this->shutdown();
-    }
-
-    /**
-     * pauseProcessing
-     */
-    public function pauseProcessing(): void
-    {
-        $this->log->info('USR2 received; pausing job processing');
-        $this->paused = true;
-    }
-
-    /**
-     * continueProcessing
-     */
-    public function continueProcessing(): void
-    {
-        $this->log->info('CONT received; resuming job processing');
-        $this->paused = false;
-    }
-
-    /**
-     * reestablishConnection
-     */
-    public function reestablishConnection(): void
-    {
-        $this->log->info('SIGPIPE received - attempting to reconnect');
-        $this->queue_manager->reestablishConnection();
-        $this->manager->reestablishConnection();
     }
 }

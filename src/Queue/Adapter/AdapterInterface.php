@@ -51,11 +51,6 @@ interface AdapterInterface
     public function reserve(string $queue): ? Job;
 
     /**
-     * reestablishConnection
-     */
-    public function reestablishConnection() : void;
-
-    /**
      * getAllQueueNames
      *
      * @return array

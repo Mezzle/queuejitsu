@@ -28,6 +28,11 @@ use Predis\Client;
 use Psr\Log\LoggerInterface;
 use QueueJitsu\Job\Job;
 
+/**
+ * Class RedisAdapter
+ *
+ * @package QueueJitsu\Queue\Adapter
+ */
 class RedisAdapter implements AdapterInterface
 {
     /**
@@ -84,20 +89,6 @@ class RedisAdapter implements AdapterInterface
         }
 
         return $queues;
-    }
-
-    /**
-     * reestablishConnection
-     *
-     */
-    public function reestablishConnection(): void
-    {
-        $this->log->info(
-            'SIGPIPE received, attempting to reconnect',
-            ['type' => 'reconnect']
-        );
-
-        $this->client->connect();
     }
 
     /**

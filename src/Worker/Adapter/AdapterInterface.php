@@ -24,24 +24,61 @@
 
 namespace QueueJitsu\Worker\Adapter;
 
-use QueueJitsu\Job\Job;
-use QueueJitsu\Worker\Worker;
+use QueueJitsu\Worker\AbstractWorker;
 
+/**
+ * Interface AdapterInterface
+ *
+ * @package QueueJitsu\Worker\Adapter
+ */
 interface AdapterInterface
 {
+    /**
+     * getAllWorkerIds
+     *
+     * @return array
+     */
     public function getAllWorkerIds(): array;
 
+    /**
+     * unregisterWorker
+     *
+     * @param $id
+     */
     public function unregisterWorker($id): void;
 
-    public function reestablishConnection(): void;
-
+    /**
+     * registerWorker
+     *
+     * @param $worker
+     */
     public function registerWorker($worker): void;
 
-    public function setWorkerWorkingOn(Worker $worker, Job $job);
+    /**
+     * setTask
+     *
+     * @param \QueueJitsu\Worker\AbstractWorker $worker
+     * @param $data
+     */
+    public function setTask(AbstractWorker $worker, $data): void;
 
+    /**
+     * increaseProcessedCount
+     *
+     */
     public function increaseProcessedCount(): void;
 
-    public function increaseWorkerProcessedCount(Worker $worker): void;
+    /**
+     * increaseWorkerProcessedCount
+     *
+     * @param \QueueJitsu\Worker\AbstractWorker $worker
+     */
+    public function increaseWorkerProcessedCount(AbstractWorker $worker): void;
 
-    public function clearJob(Worker $worker): void;
+    /**
+     * clearJob
+     *
+     * @param \QueueJitsu\Worker\AbstractWorker $worker
+     */
+    public function clearTaskData(AbstractWorker $worker): void;
 }

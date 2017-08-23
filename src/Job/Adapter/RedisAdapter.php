@@ -52,27 +52,6 @@ class RedisAdapter implements AdapterInterface
     }
 
     /**
-     * updateStatus
-     *
-     * @param \QueueJitsu\Job\Job $job
-     * @param int $status
-     */
-    public function updateStatus(Job $job, int $status): void
-    {
-        $id = sprintf('job:%s:status', $job->getId());
-        $packet = [
-            'status' => $status,
-            'updated' => time(),
-        ];
-
-        $this->client->set($id, json_encode($packet));
-
-        if (in_array($status, JobManager::COMPLETED_STATUSES)) {
-            $this->client->expire($id, 86400);
-        }
-    }
-
-    /**
      * createFailure
      *
      * @param array $payload
@@ -96,5 +75,26 @@ class RedisAdapter implements AdapterInterface
             3600 * 14,
             json_encode($data)
         );
+    }
+
+    /**
+     * updateStatus
+     *
+     * @param \QueueJitsu\Job\Job $job
+     * @param int $status
+     */
+    public function updateStatus(Job $job, int $status): void
+    {
+        $id = sprintf('job:%s:status', $job->getId());
+        $packet = [
+            'status' => $status,
+            'updated' => time(),
+        ];
+
+        $this->client->set($id, json_encode($packet));
+
+        if (in_array($status, JobManager::COMPLETED_STATUSES)) {
+            $this->client->expire($id, 86400);
+        }
     }
 }
