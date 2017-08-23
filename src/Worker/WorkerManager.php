@@ -116,7 +116,7 @@ class WorkerManager
      *
      * @param string $worker
      */
-    private function unregisterWorker(string $worker): void
+    public function unregisterWorker(string $worker): void
     {
         $this->adapter->unregisterWorker($worker);
     }

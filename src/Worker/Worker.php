@@ -57,7 +57,7 @@ class Worker implements EventManagerAwareInterface
     /**
      * @var bool $finish
      */
-    private $finish = false;
+    protected $finish = false;
 
     /**
      * @var string $hostname
@@ -72,17 +72,17 @@ class Worker implements EventManagerAwareInterface
     /**
      * @var \QueueJitsu\Job\JobManager $job_manager
      */
-    private $job_manager;
+    protected $job_manager;
 
     /**
      * @var \Psr\Log\LoggerInterface $log
      */
-    private $log;
+    protected $log;
 
     /**
      * @var \QueueJitsu\Worker\WorkerManager $manager
      */
-    private $manager;
+    protected $manager;
 
     /**
      * @var bool $paused
@@ -92,7 +92,7 @@ class Worker implements EventManagerAwareInterface
     /**
      * @var \QueueJitsu\Queue\QueueManager $queue_manager
      */
-    private $queue_manager;
+    protected $queue_manager;
 
     /**
      * @var string $worker_name
@@ -183,6 +183,8 @@ class Worker implements EventManagerAwareInterface
             $this->child = null;
             $this->finishedWorking();
         }
+
+        $this->manager->unregisterWorker($this->getId());
     }
 
     /**
@@ -200,7 +202,7 @@ class Worker implements EventManagerAwareInterface
     /**
      * startup
      */
-    private function startup()
+    protected function startup()
     {
         $this->log->info(sprintf('Starting worker %s', $this->id));
 
