@@ -190,7 +190,7 @@ class Worker implements EventManagerAwareInterface
      *
      * @param string $status
      */
-    private function updateProcLine(string $status): void
+    protected function updateProcLine(string $status): void
     {
         if (function_exists('cli_set_process_title')) {
             cli_set_process_title('qjitsu: ' . $status);
