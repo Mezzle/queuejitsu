@@ -69,10 +69,10 @@ class Worker extends AbstractWorker
         QueueManager $queue_manager,
         JobManager $job_manager
     ) {
-        parent::__construct($log, $manager);
-
         $this->queue_manager = $queue_manager;
         $this->job_manager = $job_manager;
+
+        parent::__construct($log, $manager);
     }
 
     /**
