@@ -59,7 +59,7 @@ class QueueManagerFactory
         $adapter = $container->get(AdapterInterface::class);
 
         return function ($queues) use ($strategy, $logger, $adapter) {
-            return new QueueManager($queues, $strategy, $logger, $adapter);
+            return new QueueManager($logger, $adapter, $strategy, $queues);
         };
     }
 }

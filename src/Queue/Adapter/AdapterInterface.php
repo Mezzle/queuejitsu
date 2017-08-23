@@ -37,9 +37,8 @@ interface AdapterInterface
      * enqueue
      *
      * @param \QueueJitsu\Job\Job $job
-     * @param string $queue
      */
-    public function enqueue(Job $job, string $queue): void;
+    public function enqueue(Job $job): void;
 
     /**
      * reserve
