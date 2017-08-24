@@ -97,15 +97,4 @@ class QueueManager
     {
         return $this->strategy->reserve($this->queues, $this->adapter);
     }
-
-    /**
-     * enqueue
-     *
-     * @param \QueueJitsu\Job\Job $job
-     * @param $queue
-     */
-    public function enqueue(Job $job): void
-    {
-        $this->adapter->enqueue($job);
-    }
 }

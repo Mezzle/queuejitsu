@@ -97,4 +97,23 @@ class RedisAdapter implements AdapterInterface
             $this->client->expire($id, 86400);
         }
     }
+
+    /**
+     * enqueue
+     *
+     * @param \QueueJitsu\Job\Job $job
+     */
+    public function enqueue(Job $job): void
+    {
+        $queue = $job->getQueue();
+
+        $this->client->sadd('queue', [$queue]);
+
+        $this->client->rpush(
+            sprintf('queue:%s', $queue),
+            [
+                json_encode($job->getPayload()),
+            ]
+        );
+    }
 }

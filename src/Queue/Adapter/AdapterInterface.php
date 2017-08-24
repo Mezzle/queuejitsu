@@ -34,13 +34,6 @@ use QueueJitsu\Job\Job;
 interface AdapterInterface
 {
     /**
-     * enqueue
-     *
-     * @param \QueueJitsu\Job\Job $job
-     */
-    public function enqueue(Job $job): void;
-
-    /**
      * reserve
      *
      * @param string $queue

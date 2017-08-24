@@ -169,4 +169,15 @@ class JobManager implements EventManagerAwareInterface
     {
         $this->adapter->createFailure($payload, $exception, $worker, $queue);
     }
+
+    /**
+     * enqueue
+     *
+     * @param \QueueJitsu\Job\Job $job
+     */
+    public function enqueue(Job $job): void
+    {
+        $this->adapter->enqueue($job);
+        $this->updateStatus($job, self::STATUS_WAITING);
+    }
 }
