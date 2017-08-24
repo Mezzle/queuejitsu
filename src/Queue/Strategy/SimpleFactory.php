@@ -24,8 +24,8 @@
 
 namespace QueueJitsu\Queue\Strategy;
 
-use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 /**
@@ -47,7 +47,7 @@ class SimpleFactory
      */
     public function __invoke(ContainerInterface $container)
     {
-        $logger_class = $container->has(Logger::class) ? Logger::class : NullLogger::class;
+        $logger_class = $container->has(LoggerInterface::class) ? LoggerInterface::class : NullLogger::class;
 
         $logger = $container->get($logger_class);
 
