@@ -64,7 +64,7 @@ class RedisAdapter implements AdapterInterface
      */
     public function getAllQueueNames(): array
     {
-        $queues = $this->client->smembers('queues');
+        $queues = $this->client->smembers('queue');
 
         if (!is_array($queues)) {
             $queues = [];
