@@ -92,6 +92,6 @@ class RedisAdapter implements AdapterInterface
 
         $id = isset($payload['id']) ? $payload['id'] : null;
 
-        return new Job($payload['class'], $queue, $payload, $id);
+        return new Job($payload['class'], $queue, $payload['args'], $id);
     }
 }
