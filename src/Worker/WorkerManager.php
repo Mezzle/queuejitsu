@@ -25,7 +25,6 @@
 namespace QueueJitsu\Worker;
 
 use Psr\Log\LoggerInterface;
-use QueueJitsu\Job\Job;
 use QueueJitsu\Worker\Adapter\AdapterInterface;
 
 /**
@@ -116,17 +115,9 @@ class WorkerManager
      *
      * @param string $worker
      */
-    private function unregisterWorker(string $worker): void
+    public function unregisterWorker(string $worker): void
     {
         $this->adapter->unregisterWorker($worker);
-    }
-
-    /**
-     * reestablishConnection
-     */
-    public function reestablishConnection()
-    {
-        $this->adapter->reestablishConnection();
     }
 
     /**
@@ -134,20 +125,31 @@ class WorkerManager
      *
      * @param string $worker
      */
-    public function registerWorker(string $worker)
+    public function registerWorker(string $worker): void
     {
         $this->adapter->registerWorker($worker);
     }
 
-    public function setWorkerWorkingOn(Worker $id, Job $job)
+    /**
+     * setTask
+     *
+     * @param \QueueJitsu\Worker\AbstractWorker $worker
+     * @param $data
+     */
+    public function setTask(AbstractWorker $worker, $data): void
     {
-        $this->adapter->setWorkerWorkingOn($id, $job);
+        $this->adapter->setTask($worker, $data);
     }
 
-    public function finishedWorking(Worker $worker)
+    /**
+     * finishedWorking
+     *
+     * @param \QueueJitsu\Worker\AbstractWorker $worker
+     */
+    public function finishedWorking(AbstractWorker $worker): void
     {
         $this->adapter->increaseProcessedCount();
         $this->adapter->increaseWorkerProcessedCount($worker);
-        $this->adapter->clearJob($worker);
+        $this->adapter->clearTaskData($worker);
     }
 }

@@ -34,14 +34,6 @@ use QueueJitsu\Job\Job;
 interface AdapterInterface
 {
     /**
-     * enqueue
-     *
-     * @param \QueueJitsu\Job\Job $job
-     * @param string $queue
-     */
-    public function enqueue(Job $job, string $queue): void;
-
-    /**
      * reserve
      *
      * @param string $queue
@@ -49,11 +41,6 @@ interface AdapterInterface
      * @return null|\QueueJitsu\Job\Job
      */
     public function reserve(string $queue): ? Job;
-
-    /**
-     * reestablishConnection
-     */
-    public function reestablishConnection() : void;
 
     /**
      * getAllQueueNames

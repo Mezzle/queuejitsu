@@ -84,17 +84,6 @@ class JobManager implements EventManagerAwareInterface
     }
 
     /**
-     * updateStatus
-     *
-     * @param \QueueJitsu\Job\Job $job
-     * @param int $status
-     */
-    public function updateStatus(Job $job, int $status)
-    {
-        $this->adapter->updateStatus($job, $status);
-    }
-
-    /**
      * run
      *
      * @param \QueueJitsu\Job\Job $job
@@ -158,6 +147,17 @@ class JobManager implements EventManagerAwareInterface
     }
 
     /**
+     * updateStatus
+     *
+     * @param \QueueJitsu\Job\Job $job
+     * @param int $status
+     */
+    public function updateStatus(Job $job, int $status)
+    {
+        $this->adapter->updateStatus($job, $status);
+    }
+
+    /**
      * createFailure
      *
      * @param array $payload
@@ -168,5 +168,16 @@ class JobManager implements EventManagerAwareInterface
     private function createFailure(array $payload, Throwable $exception, string $worker, string $queue)
     {
         $this->adapter->createFailure($payload, $exception, $worker, $queue);
+    }
+
+    /**
+     * enqueue
+     *
+     * @param \QueueJitsu\Job\Job $job
+     */
+    public function enqueue(Job $job): void
+    {
+        $this->adapter->enqueue($job);
+        $this->updateStatus($job, self::STATUS_WAITING);
     }
 }

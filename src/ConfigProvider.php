@@ -42,7 +42,6 @@ class ConfigProvider
     {
         return [
             'dependencies' => $this->getDependencies(),
-            'queuejitsu' => $this->getDefaultConfig(),
         ];
     }
 
@@ -66,15 +65,5 @@ class ConfigProvider
                 Worker\WorkerManager::class => Worker\WorkerManagerFactory::class,
             ],
         ];
-    }
-
-    /**
-     * getDefaultConfig
-     *
-     * @return string
-     */
-    private function getDefaultConfig()
-    {
-        return include __DIR__ . '/../config/config.php';
     }
 }

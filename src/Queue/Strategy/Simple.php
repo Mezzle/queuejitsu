@@ -28,6 +28,11 @@ use Psr\Log\LoggerInterface;
 use QueueJitsu\Job\Job;
 use QueueJitsu\Queue\Adapter\AdapterInterface;
 
+/**
+ * Class Simple
+ *
+ * @package QueueJitsu\Queue\Strategy
+ */
 class Simple implements StrategyInterface
 {
     /**

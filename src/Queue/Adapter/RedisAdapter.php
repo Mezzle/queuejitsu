@@ -28,6 +28,11 @@ use Predis\Client;
 use Psr\Log\LoggerInterface;
 use QueueJitsu\Job\Job;
 
+/**
+ * Class RedisAdapter
+ *
+ * @package QueueJitsu\Queue\Adapter
+ */
 class RedisAdapter implements AdapterInterface
 {
     /**
@@ -53,24 +58,6 @@ class RedisAdapter implements AdapterInterface
     }
 
     /**
-     * enqueue
-     *
-     * @param \QueueJitsu\Job\Job $job
-     * @param string $queue
-     */
-    public function enqueue(Job $job, string $queue): void
-    {
-        $this->client->sadd('queue', [$queue]);
-
-        $this->client->rpush(
-            sprintf('queue:%s', $queue),
-            [
-                json_encode($job->getPayload()),
-            ]
-        );
-    }
-
-    /**
      * getAllQueueNames
      *
      * @return array
@@ -84,20 +71,6 @@ class RedisAdapter implements AdapterInterface
         }
 
         return $queues;
-    }
-
-    /**
-     * reestablishConnection
-     *
-     */
-    public function reestablishConnection(): void
-    {
-        $this->log->info(
-            'SIGPIPE received, attempting to reconnect',
-            ['type' => 'reconnect']
-        );
-
-        $this->client->connect();
     }
 
     /**

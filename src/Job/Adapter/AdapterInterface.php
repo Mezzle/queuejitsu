@@ -51,4 +51,11 @@ interface AdapterInterface
      * @param string $queue
      */
     public function createFailure(array $payload, Throwable $exception, string $worker, string $queue): void;
+
+    /**
+     * enqueue
+     *
+     * @param \QueueJitsu\Job\Job $job
+     */
+    public function enqueue(Job $job): void;
 }

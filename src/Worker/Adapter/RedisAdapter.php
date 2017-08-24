@@ -25,9 +25,13 @@
 namespace QueueJitsu\Worker\Adapter;
 
 use Predis\Client;
-use QueueJitsu\Job\Job;
-use QueueJitsu\Worker\Worker;
+use QueueJitsu\Worker\AbstractWorker;
 
+/**
+ * Class RedisAdapter
+ *
+ * @package QueueJitsu\Worker\Adapter
+ */
 class RedisAdapter implements AdapterInterface
 {
     /**
@@ -43,6 +47,16 @@ class RedisAdapter implements AdapterInterface
     public function __construct(Client $client)
     {
         $this->client = $client;
+    }
+
+    /**
+     * clearTaskData
+     *
+     * @param \QueueJitsu\Worker\AbstractWorker $worker
+     */
+    public function clearTaskData(AbstractWorker $worker): void
+    {
+        $this->client->del([sprintf('worker:%s', $worker->getId())]);
     }
 
     /**
@@ -62,11 +76,21 @@ class RedisAdapter implements AdapterInterface
     }
 
     /**
-     * reestablishConnection
+     * increaseProcessedCount
      */
-    public function reestablishConnection(): void
+    public function increaseProcessedCount(): void
     {
-        $this->client->connect();
+        $this->client->incr('stat:processed');
+    }
+
+    /**
+     * increaseWorkerProcessedCount
+     *
+     * @param \QueueJitsu\Worker\AbstractWorker $worker
+     */
+    public function increaseWorkerProcessedCount(AbstractWorker $worker): void
+    {
+        $this->client->incr(sprintf('stat:processed:%s', $worker->getId()));
     }
 
     /**
@@ -84,19 +108,13 @@ class RedisAdapter implements AdapterInterface
     }
 
     /**
-     * setWorkerWorkingOn
+     * setTask
      *
-     * @param \QueueJitsu\Worker\Worker $worker
-     * @param \QueueJitsu\Job\Job $job
+     * @param \QueueJitsu\Worker\AbstractWorker $worker
+     * @param $data
      */
-    public function setWorkerWorkingOn(Worker $worker, Job $job)
+    public function setTask(AbstractWorker $worker, $data): void
     {
-        $data = [
-            'queue' => $job->getQueue(),
-            'run_at' => strftime('%a %b %d %H:%M:%S %Z %Y'),
-            'payload' => $job->getPayload(),
-        ];
-
         $key = sprintf('worker:%s', $worker->getId());
 
         $this->client->set($key, json_encode($data));
@@ -126,33 +144,5 @@ class RedisAdapter implements AdapterInterface
         $processed = sprintf('processed:%s', $worker);
         $failed = sprintf('failed:%s', $worker);
         $this->client->del([$processed, $failed]);
-    }
-
-    /**
-     * increaseProcessedCount
-     */
-    public function increaseProcessedCount(): void
-    {
-        $this->client->incr('stat:processed');
-    }
-
-    /**
-     * increaseWorkerProcessedCount
-     *
-     * @param \QueueJitsu\Worker\Worker $worker
-     */
-    public function increaseWorkerProcessedCount(Worker $worker): void
-    {
-        $this->client->incr(sprintf('stat:processed:%s', $worker->getId()));
-    }
-
-    /**
-     * clearJob
-     *
-     * @param \QueueJitsu\Worker\Worker $worker
-     */
-    public function clearJob(Worker $worker): void
-    {
-        $this->client->del([sprintf('worker:%s', $worker->getId())]);
     }
 }
