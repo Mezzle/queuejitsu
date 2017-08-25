@@ -13,11 +13,13 @@ engines:
   phpmd:
     enabled: true
     checks:
+      Controversial/CamelCasePropertyName:
+        enabled: false
       Controversial/CamelCaseVariableName:
         enabled: false
-      Naming/ShortVariable:
-        enabled: false
       Naming/LongVariable:
+        enabled: false
+      Naming/ShortVariable:
         enabled: false
 ratings:
   paths:
