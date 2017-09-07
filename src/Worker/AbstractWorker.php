@@ -1,6 +1,5 @@
 <?php
 
-declare(ticks=1);
 /**
  * Copyright (c) 2017 Martin Meredith
  * Copyright (c) 2017 Stickee Technology Limited
@@ -251,6 +250,8 @@ abstract class AbstractWorker implements EventManagerAwareInterface
 
             return false;
         }
+
+        pcntl_async_signals(true);
 
         pcntl_signal(SIGTERM, [$this, 'shutdownNow']);
         pcntl_signal(SIGINT, [$this, 'shutdownNow']);
