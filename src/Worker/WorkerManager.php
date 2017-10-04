@@ -73,7 +73,7 @@ class WorkerManager
         foreach ($workers as $worker) {
             [$host, $pid] = explode(':', $worker, 3);
 
-            if ($host != $this->hostname || in_array($pid, $local_pids) || $pid == getmypid()) {
+            if ($host !== $this->hostname || in_array($pid, $local_pids, false) || $pid === getmypid()) {
                 continue;
             }
             $this->log->debug(sprintf('Pruning dead worker: %s', $worker));
@@ -90,6 +90,7 @@ class WorkerManager
     public function getLocalWorkerPids(): array
     {
         $pids = [];
+        $output = [];
         exec('ps -A -o pid,args | grep "[q]jitsu"', $output);
 
         foreach ($output as $line) {

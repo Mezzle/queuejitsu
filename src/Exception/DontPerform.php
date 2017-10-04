@@ -27,7 +27,7 @@ namespace QueueJitsu\Exception;
 use RuntimeException;
 
 /**
- * Class DontPerform
+ * Class ontPerform
  *
  * @package QueueJitsu\Exception
  */

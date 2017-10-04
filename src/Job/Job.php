@@ -92,7 +92,7 @@ class Job
     /**
      * @param string $worker
      */
-    public function setWorker(string $worker)
+    public function setWorker(string $worker): void
     {
         $this->worker = $worker;
     }
@@ -132,7 +132,7 @@ class Job
      *
      * @return string
      */
-    public function getQueue()
+    public function getQueue(): string
     {
         return $this->queue;
     }
@@ -142,7 +142,7 @@ class Job
      *
      * @return array
      */
-    public function getPayload()
+    public function getPayload(): array
     {
         return [
             'queue' => $this->queue,

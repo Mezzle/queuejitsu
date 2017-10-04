@@ -42,7 +42,7 @@ abstract class AbstractWorker implements EventManagerAwareInterface
     /**
      * @var bool|null|int $child
      */
-    protected $child = null;
+    protected $child;
 
     /**
      * @var bool $finish
@@ -159,7 +159,7 @@ abstract class AbstractWorker implements EventManagerAwareInterface
         // Check if pid is running
         $executed = exec(sprintf('ps -o pid,state -p %d', $this->child), $output, $return_code);
 
-        if ($executed && $return_code != 1) {
+        if ($executed && $return_code !== 1) {
             $this->log->debug(sprintf('Killing child at %d', $this->child));
             posix_kill($this->child, SIGKILL);
             $this->child = null;
@@ -176,7 +176,6 @@ abstract class AbstractWorker implements EventManagerAwareInterface
      *
      * @param int $interval
      *
-     * @throws \QueueJitsu\Exception\ForkFailureException
      */
     public function __invoke($interval = 5)
     {
@@ -328,6 +327,7 @@ abstract class AbstractWorker implements EventManagerAwareInterface
         $pid = pcntl_fork();
 
         if ($pid === -1) {
+            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             throw new ForkFailureException('Unable to for a child worker');
         }
 

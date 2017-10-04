@@ -60,7 +60,7 @@ class Simple implements StrategyInterface
      */
     public function reserve(array $queues, AdapterInterface $adapter): ?Job
     {
-        if (in_array('*', $queues)) {
+        if (in_array('*', $queues, true)) {
             $queues = $adapter->getAllQueueNames();
         }
 

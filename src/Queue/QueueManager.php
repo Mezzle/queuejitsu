@@ -42,11 +42,6 @@ class QueueManager
     private $adapter;
 
     /**
-     * @var \Psr\Log\LoggerInterface $log
-     */
-    private $log;
-
-    /**
      * @var string[] $queues
      */
     private $queues;
@@ -59,21 +54,16 @@ class QueueManager
     /**
      * QueueManager constructor.
      *
-     * @param string[] $queues
-     * @param \QueueJitsu\Queue\Strategy\StrategyInterface $strategy
-     * @param \Psr\Log\LoggerInterface $log
      * @param \QueueJitsu\Queue\Adapter\AdapterInterface $adapter
-     *
-     * @throws \QueueJitsu\Exception\InvalidQueueException
+     * @param \QueueJitsu\Queue\Strategy\StrategyInterface $strategy
+     * @param array $queues
      */
     public function __construct(
-        LoggerInterface $log,
         AdapterInterface $adapter,
         StrategyInterface $strategy,
         array $queues = ['*']
     ) {
         $this->strategy = $strategy;
-        $this->log = $log;
         $this->queues = $queues;
         $this->adapter = $adapter;
     }

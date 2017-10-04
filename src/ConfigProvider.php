@@ -50,7 +50,7 @@ class ConfigProvider
      *
      * @return array
      */
-    private function getDependencies()
+    private function getDependencies(): array
     {
         return [
             'invokables' => [

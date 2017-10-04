@@ -41,19 +41,12 @@ class RedisAdapter implements AdapterInterface
     private $client;
 
     /**
-     * @var \Psr\Log\LoggerInterface $log
-     */
-    private $log;
-
-    /**
      * RedisAdapter constructor.
      *
      * @param \Predis\Client $client
-     * @param \Psr\Log\LoggerInterface $log
      */
-    public function __construct(Client $client, LoggerInterface $log)
+    public function __construct(Client $client)
     {
-        $this->log = $log;
         $this->client = $client;
     }
 
@@ -90,7 +83,7 @@ class RedisAdapter implements AdapterInterface
 
         $payload = json_decode($item, true);
 
-        $id = isset($payload['id']) ? $payload['id'] : null;
+        $id = $payload['id'] ?? null;
 
         return new Job($payload['class'], $queue, $payload['args'], $id);
     }

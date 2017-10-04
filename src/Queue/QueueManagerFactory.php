@@ -53,13 +53,10 @@ class QueueManagerFactory
         $strategy_class = $container->has(Strategy::class) ? Strategy::class : Simple::class;
         $strategy = $container->get($strategy_class);
 
-        $logger_class = $container->has(Logger::class) ? Logger::class : NullLogger::class;
-        $logger = $container->get($logger_class);
-
         $adapter = $container->get(AdapterInterface::class);
 
-        return function ($queues) use ($strategy, $logger, $adapter) {
-            return new QueueManager($logger, $adapter, $strategy, $queues);
+        return function ($queues) use ($strategy, $adapter) {
+            return new QueueManager($adapter, $strategy, $queues);
         };
     }
 }

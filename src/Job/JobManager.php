@@ -110,7 +110,7 @@ class JobManager implements EventManagerAwareInterface
             }
 
             $this->getEventManager()->trigger('afterPerform', $job);
-        } catch (DontPerform $e) {
+        } /** @noinspection PhpRedundantCatchClauseInspection */ catch (DontPerform $e) {
             $this->log->debug(sprintf('Job %s triggered a DontPerform', $job->getId()));
             // Don't Perform this job triggered
         } catch (Throwable $e) {

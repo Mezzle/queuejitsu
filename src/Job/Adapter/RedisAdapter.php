@@ -93,7 +93,7 @@ class RedisAdapter implements AdapterInterface
 
         $this->client->set($id, json_encode($packet));
 
-        if (in_array($status, JobManager::COMPLETED_STATUSES)) {
+        if (in_array($status, JobManager::COMPLETED_STATUSES, false)) {
             $this->client->expire($id, 86400);
         }
     }

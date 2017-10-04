@@ -199,7 +199,7 @@ class Worker extends AbstractWorker
         );
 
         pcntl_wait($wait_status);
-        $exit_status = (pcntl_wexitstatus($wait_status));
+        $exit_status = pcntl_wexitstatus($wait_status);
 
         if ($exit_status !== 0) {
             $this->job_manager->failJob(
