@@ -27,6 +27,7 @@ namespace QueueJitsu\Job\Adapter;
 use Predis\Client;
 use QueueJitsu\Job\Job;
 use QueueJitsu\Job\JobManager;
+use Ramsey\Uuid\Uuid;
 use Throwable;
 
 /**
@@ -34,7 +35,7 @@ use Throwable;
  *
  * @package QueueJitsu\Job\Adapter
  */
-class RedisAdapter implements AdapterInterface
+class RedisAdapter implements StatusQueryInterface
 {
     /**
      * @var \Predis\Client $client
@@ -78,6 +79,44 @@ class RedisAdapter implements AdapterInterface
     }
 
     /**
+     * enqueue
+     *
+     * @param \QueueJitsu\Job\Job $job
+     */
+    public function enqueue(Job $job): void
+    {
+        $queue = $job->getQueue();
+
+        $this->client->sadd('queue', [$queue]);
+
+        $this->client->rpush(
+            sprintf('queue:%s', $queue),
+            [
+                json_encode($job->getPayload()),
+            ]
+        );
+    }
+
+    /**
+     * getStatus
+     *
+     * @param string $guid
+     *
+     * @return array
+     */
+    public function getStatus(string $guid): array
+    {
+        // Normalise
+        $guid = Uuid::fromString($guid)->toString();
+
+        $key = sprintf('job:%s:status', $guid);
+
+        $status_packet = $this->client->get($key);
+
+        return json_decode($status_packet, true);
+    }
+
+    /**
      * updateStatus
      *
      * @param \QueueJitsu\Job\Job $job
@@ -96,24 +135,5 @@ class RedisAdapter implements AdapterInterface
         if (in_array($status, JobManager::COMPLETED_STATUSES, false)) {
             $this->client->expire($id, 86400);
         }
-    }
-
-    /**
-     * enqueue
-     *
-     * @param \QueueJitsu\Job\Job $job
-     */
-    public function enqueue(Job $job): void
-    {
-        $queue = $job->getQueue();
-
-        $this->client->sadd('queue', [$queue]);
-
-        $this->client->rpush(
-            sprintf('queue:%s', $queue),
-            [
-                json_encode($job->getPayload()),
-            ]
-        );
     }
 }

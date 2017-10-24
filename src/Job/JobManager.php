@@ -26,7 +26,9 @@ namespace QueueJitsu\Job;
 
 use Psr\Log\LoggerInterface;
 use QueueJitsu\Exception\DontPerform;
+use QueueJitsu\Exception\StatusQueryNotImplemented;
 use QueueJitsu\Job\Adapter\AdapterInterface;
+use QueueJitsu\Job\Adapter\StatusQueryInterface;
 use QueueJitsu\Job\Strategy\StrategyInterface;
 use Throwable;
 use Zend\EventManager\EventManagerAwareInterface;
@@ -179,5 +181,23 @@ class JobManager implements EventManagerAwareInterface
     {
         $this->adapter->enqueue($job);
         $this->updateStatus($job, self::STATUS_WAITING);
+    }
+
+    /**
+     * getStatus
+     *
+     * @param string $guid
+     *
+     * @return array
+     *
+     * @throws \QueueJitsu\Exception\StatusQueryNotImplemented
+     */
+    public function getStatus(string $guid)
+    {
+        if ($this->adapter instanceof StatusQueryInterface) {
+            return $this->adapter->getStatus($guid);
+        }
+
+        throw new StatusQueryNotImplemented('Querying of Statuses not available in this implementation');
     }
 }
