@@ -24,7 +24,6 @@
 
 namespace QueueJitsu\Queue;
 
-use Psr\Log\LoggerInterface;
 use QueueJitsu\Job\Job;
 use QueueJitsu\Queue\Adapter\AdapterInterface;
 use QueueJitsu\Queue\Strategy\StrategyInterface;

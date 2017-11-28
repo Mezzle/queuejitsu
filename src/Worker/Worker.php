@@ -25,7 +25,7 @@
 namespace QueueJitsu\Worker;
 
 use Psr\Log\LoggerInterface;
-use QueueJitsu\Exception\DirtyExitException;
+use QueueJitsu\Exception\DirtyExit;
 use QueueJitsu\Job\Job;
 use QueueJitsu\Job\JobManager;
 use QueueJitsu\Queue\QueueManager;
@@ -37,7 +37,6 @@ use QueueJitsu\Queue\QueueManager;
  */
 class Worker extends AbstractWorker
 {
-
     /**
      * @var Job|null $current_job
      */
@@ -80,12 +79,11 @@ class Worker extends AbstractWorker
      */
     protected function getWorkerIdentifier(): string
     {
-        return implode(',', $this->queue_manager->getQueues());
+        return \implode(',', $this->queue_manager->getQueues());
     }
 
     /**
      * finishedWorking
-     *
      */
     protected function finishedWorking(): void
     {
@@ -97,7 +95,7 @@ class Worker extends AbstractWorker
     /**
      * loop
      *
-     * @throws \QueueJitsu\Exception\ForkFailureException
+     * @throws \QueueJitsu\Exception\ForkFailure
      */
     protected function loop(): void
     {
@@ -109,7 +107,7 @@ class Worker extends AbstractWorker
             return;
         }
 
-        $this->log->info(sprintf('got Job %s', $job->getId()));
+        $this->log->info(\sprintf('got Job %s', $job->getId()));
 
         $this->getEventManager()->trigger('beforeFork', $job);
         $this->setWorkingOn($job);
@@ -150,7 +148,7 @@ class Worker extends AbstractWorker
         $this->setTask(
             [
                 'queue' => $job->getQueue(),
-                'run_at' => strftime('%a %b %d %H:%M:%S %Z %Y'),
+                'run_at' => \strftime('%a %b %d %H:%M:%S %Z %Y'),
                 'payload' => $job->getPayload(),
             ]
         );
@@ -167,7 +165,7 @@ class Worker extends AbstractWorker
      */
     private function runAsChild(Job $job): void
     {
-        $status = sprintf('Processing ID: %s in %s', $job->getId(), $job->getQueue());
+        $status = \sprintf('Processing ID: %s in %s', $job->getId(), $job->getQueue());
         $this->updateProcLine($status);
 
         $this->log->info($status);
@@ -186,7 +184,7 @@ class Worker extends AbstractWorker
      */
     private function runAsParent(Job $job): void
     {
-        $status = sprintf('Forked %s for ID: %s', $this->child, $job->getId());
+        $status = \sprintf('Forked %s for ID: %s', $this->child, $job->getId());
         $this->updateProcLine($status);
 
         $this->log->debug(
@@ -198,14 +196,14 @@ class Worker extends AbstractWorker
             ]
         );
 
-        pcntl_wait($wait_status);
-        $exit_status = pcntl_wexitstatus($wait_status);
+        \pcntl_wait($wait_status);
+        $exit_status = \pcntl_wexitstatus($wait_status);
 
         if ($exit_status !== 0) {
             $this->job_manager->failJob(
                 $job,
-                new DirtyExitException(
-                    sprintf('Job Exited with exit code %d', $exit_status)
+                new DirtyExit(
+                    \sprintf('Job Exited with exit code %d', $exit_status)
                 )
             );
         }

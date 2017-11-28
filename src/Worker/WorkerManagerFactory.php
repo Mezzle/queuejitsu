@@ -41,10 +41,10 @@ class WorkerManagerFactory
      *
      * @param \Psr\Container\ContainerInterface $container
      *
-     * @return \QueueJitsu\Worker\WorkerManager
-     *
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
+     *
+     * @return \QueueJitsu\Worker\WorkerManager
      */
     public function __invoke(ContainerInterface $container)
     {

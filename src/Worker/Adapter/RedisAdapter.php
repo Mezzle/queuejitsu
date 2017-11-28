@@ -56,7 +56,7 @@ class RedisAdapter implements AdapterInterface
      */
     public function clearTaskData(AbstractWorker $worker): void
     {
-        $this->client->del([sprintf('worker:%s', $worker->getId())]);
+        $this->client->del([\sprintf('worker:%s', $worker->getId())]);
     }
 
     /**
@@ -68,7 +68,7 @@ class RedisAdapter implements AdapterInterface
     {
         $workers = $this->client->smembers('workers');
 
-        if (!is_array($workers)) {
+        if (!\is_array($workers)) {
             $workers = [];
         }
 
@@ -90,7 +90,7 @@ class RedisAdapter implements AdapterInterface
      */
     public function increaseWorkerProcessedCount(AbstractWorker $worker): void
     {
-        $this->client->incr(sprintf('stat:processed:%s', $worker->getId()));
+        $this->client->incr(\sprintf('stat:processed:%s', $worker->getId()));
     }
 
     /**
@@ -102,8 +102,8 @@ class RedisAdapter implements AdapterInterface
     {
         $this->client->sadd('workers', $worker);
         $this->client->set(
-            sprintf('worker:%s:started', $worker),
-            strftime('%a %b %d %H:%M:%S %Z %Y')
+            \sprintf('worker:%s:started', $worker),
+            \strftime('%a %b %d %H:%M:%S %Z %Y')
         );
     }
 
@@ -115,9 +115,9 @@ class RedisAdapter implements AdapterInterface
      */
     public function setTask(AbstractWorker $worker, $data): void
     {
-        $key = sprintf('worker:%s', $worker->getId());
+        $key = \sprintf('worker:%s', $worker->getId());
 
-        $this->client->set($key, json_encode($data));
+        $this->client->set($key, \json_encode($data));
     }
 
     /**
@@ -128,8 +128,8 @@ class RedisAdapter implements AdapterInterface
     public function unregisterWorker($id): void
     {
         $this->client->srem('workers', $id);
-        $worker_key = sprintf('worker:%s', $id);
-        $worker_started = sprintf('%s:started', $worker_key);
+        $worker_key = \sprintf('worker:%s', $id);
+        $worker_started = \sprintf('%s:started', $worker_key);
         $this->client->del([$worker_key, $worker_started]);
         $this->deleteStats($id);
     }
@@ -141,8 +141,8 @@ class RedisAdapter implements AdapterInterface
      */
     private function deleteStats($worker)
     {
-        $processed = sprintf('processed:%s', $worker);
-        $failed = sprintf('failed:%s', $worker);
+        $processed = \sprintf('processed:%s', $worker);
+        $failed = \sprintf('failed:%s', $worker);
         $this->client->del([$processed, $failed]);
     }
 }

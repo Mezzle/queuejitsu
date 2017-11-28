@@ -25,7 +25,6 @@
 namespace QueueJitsu\Queue\Adapter;
 
 use Predis\Client;
-use Psr\Log\LoggerInterface;
 use QueueJitsu\Job\Job;
 
 /**
@@ -59,7 +58,7 @@ class RedisAdapter implements AdapterInterface
     {
         $queues = $this->client->smembers('queue');
 
-        if (!is_array($queues)) {
+        if (!\is_array($queues)) {
             $queues = [];
         }
 
@@ -75,13 +74,13 @@ class RedisAdapter implements AdapterInterface
      */
     public function reserve(string $queue): ?Job
     {
-        $item = $this->client->lpop(sprintf('queue:%s', $queue));
+        $item = $this->client->lpop(\sprintf('queue:%s', $queue));
 
         if (!$item) {
             return null;
         }
 
-        $payload = json_decode($item, true);
+        $payload = \json_decode($item, true);
 
         $id = $payload['id'] ?? null;
 

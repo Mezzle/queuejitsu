@@ -64,7 +64,6 @@ interface AdapterInterface
 
     /**
      * increaseProcessedCount
-     *
      */
     public function increaseProcessedCount(): void;
 

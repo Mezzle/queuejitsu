@@ -27,10 +27,10 @@ namespace QueueJitsu\Exception;
 use RuntimeException;
 
 /**
- * Class ForkFailureException
+ * Class DirtyExitException
  *
  * @package QueueJitsu\Exception
  */
-class ForkFailureException extends RuntimeException
+class DirtyExit extends RuntimeException
 {
 }

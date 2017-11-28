@@ -26,11 +26,6 @@ namespace QueueJitsu\Exception;
 
 use RuntimeException;
 
-/**
- * Class StatusQueryNotImplemented
- *
- * @package QueueJitsu\Exception
- */
-class StatusQueryNotImplemented extends RuntimeException
+class NotImplemented extends RuntimeException
 {
 }

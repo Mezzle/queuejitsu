@@ -26,7 +26,7 @@
 namespace QueueJitsu\Worker;
 
 use Psr\Log\LoggerInterface;
-use QueueJitsu\Exception\ForkFailureException;
+use QueueJitsu\Exception\ForkFailure;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
 
@@ -93,9 +93,9 @@ abstract class AbstractWorker implements EventManagerAwareInterface
     public function __construct(LoggerInterface $log, WorkerManager $manager)
     {
         $this->log = $log;
-        $this->hostname = gethostname();
-        $this->worker_name = sprintf('%s:%d', $this->hostname, getmypid());
-        $this->id = sprintf('%s:%s', $this->worker_name, $this->getWorkerIdentifier());
+        $this->hostname = \gethostname();
+        $this->worker_name = \sprintf('%s:%d', $this->hostname, \getmypid());
+        $this->id = \sprintf('%s:%s', $this->worker_name, $this->getWorkerIdentifier());
         $this->manager = $manager;
     }
 
@@ -148,26 +148,26 @@ abstract class AbstractWorker implements EventManagerAwareInterface
      */
     public function killChild(): void
     {
-        if (is_null($this->child)) {
+        if (\is_null($this->child)) {
             $this->log->debug('No child to kill');
 
             return;
         }
 
-        $this->log->debug(sprintf('Finding child at %d', $this->child));
+        $this->log->debug(\sprintf('Finding child at %d', $this->child));
 
         // Check if pid is running
-        $executed = exec(sprintf('ps -o pid,state -p %d', $this->child), $output, $return_code);
+        $executed = \exec(\sprintf('ps -o pid,state -p %d', $this->child), $output, $return_code);
 
         if ($executed && $return_code !== 1) {
-            $this->log->debug(sprintf('Killing child at %d', $this->child));
-            posix_kill($this->child, SIGKILL);
+            $this->log->debug(\sprintf('Killing child at %d', $this->child));
+            \posix_kill($this->child, SIGKILL);
             $this->child = null;
 
             return;
         }
 
-        $this->log->error(sprintf('Child %d not found, restarting', $this->child));
+        $this->log->error(\sprintf('Child %d not found, restarting', $this->child));
         $this->shutdown();
     }
 
@@ -175,7 +175,6 @@ abstract class AbstractWorker implements EventManagerAwareInterface
      * __invoke
      *
      * @param int $interval
-     *
      */
     public function __invoke($interval = 5)
     {
@@ -208,8 +207,8 @@ abstract class AbstractWorker implements EventManagerAwareInterface
      */
     protected function updateProcLine(string $status): void
     {
-        if (function_exists('cli_set_process_title')) {
-            cli_set_process_title(sprintf('qjitsu-%s: %s', $this->getWorkerType(), $status));
+        if (\function_exists('cli_set_process_title')) {
+            \cli_set_process_title(\sprintf('qjitsu-%s: %s', $this->getWorkerType(), $status));
         }
     }
 
@@ -228,7 +227,7 @@ abstract class AbstractWorker implements EventManagerAwareInterface
      */
     protected function startup()
     {
-        $this->log->info(sprintf('Starting worker %s', $this->id));
+        $this->log->info(\sprintf('Starting worker %s', $this->id));
 
         $this->registerSignalHandlers();
         $this->pruneDeadWorkers();
@@ -244,20 +243,20 @@ abstract class AbstractWorker implements EventManagerAwareInterface
      */
     protected function registerSignalHandlers(): bool
     {
-        if (!function_exists('pcntl_signal')) {
+        if (!\function_exists('pcntl_signal')) {
             $this->log->warning('Signal Handling is not supported on this system');
 
             return false;
         }
 
-        pcntl_async_signals(true);
+        \pcntl_async_signals(true);
 
-        pcntl_signal(SIGTERM, [$this, 'shutdownNow']);
-        pcntl_signal(SIGINT, [$this, 'shutdownNow']);
-        pcntl_signal(SIGQUIT, [$this, 'shutdown']);
-        pcntl_signal(SIGUSR1, [$this, 'killChild']);
-        pcntl_signal(SIGUSR2, [$this, 'pauseProcessing']);
-        pcntl_signal(SIGCONT, [$this, 'continueProcessing']);
+        \pcntl_signal(SIGTERM, [$this, 'shutdownNow']);
+        \pcntl_signal(SIGINT, [$this, 'shutdownNow']);
+        \pcntl_signal(SIGQUIT, [$this, 'shutdown']);
+        \pcntl_signal(SIGUSR1, [$this, 'killChild']);
+        \pcntl_signal(SIGUSR2, [$this, 'pauseProcessing']);
+        \pcntl_signal(SIGCONT, [$this, 'continueProcessing']);
 
         $this->log->debug('Registered Signals');
 
@@ -274,22 +273,20 @@ abstract class AbstractWorker implements EventManagerAwareInterface
 
     /**
      * sleep
-     *
      */
     protected function sleep(): void
     {
-        $this->log->debug(sprintf('Sleeping for %d', $this->interval));
+        $this->log->debug(\sprintf('Sleeping for %d', $this->interval));
 
-        $waitString = sprintf('Waiting for %s', $this->getWorkerIdentifier());
+        $waitString = \sprintf('Waiting for %s', $this->getWorkerIdentifier());
         $procline = $this->paused ? 'Paused' : $waitString;
         $this->updateProcLine($procline);
 
-        usleep($this->interval * 1000000);
+        \usleep($this->interval * 1000000);
     }
 
     /**
      * loop
-     *
      */
     abstract protected function loop(): void;
 
@@ -314,21 +311,21 @@ abstract class AbstractWorker implements EventManagerAwareInterface
     /**
      * fork
      *
-     * @return bool|int
+     * @throws \QueueJitsu\Exception\ForkFailure
      *
-     * @throws \QueueJitsu\Exception\ForkFailureException
+     * @return bool|int
      */
     protected function fork()
     {
-        if (!function_exists('pcntl_fork')) {
+        if (!\function_exists('pcntl_fork')) {
             return false;
         }
 
-        $pid = pcntl_fork();
+        $pid = \pcntl_fork();
 
         if ($pid === -1) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-            throw new ForkFailureException('Unable to for a child worker');
+            throw new ForkFailure('Unable to for a child worker');
         }
 
         return $pid;

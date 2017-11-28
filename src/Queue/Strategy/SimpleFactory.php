@@ -40,10 +40,10 @@ class SimpleFactory
      *
      * @param \Psr\Container\ContainerInterface $container
      *
-     * @return \QueueJitsu\Queue\Strategy\Simple
-     *
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
+     *
+     * @return \QueueJitsu\Queue\Strategy\Simple
      */
     public function __invoke(ContainerInterface $container)
     {

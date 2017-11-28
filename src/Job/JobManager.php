@@ -26,7 +26,7 @@ namespace QueueJitsu\Job;
 
 use Psr\Log\LoggerInterface;
 use QueueJitsu\Exception\DontPerform;
-use QueueJitsu\Exception\StatusQueryNotImplemented;
+use QueueJitsu\Exception\NotImplemented;
 use QueueJitsu\Job\Adapter\AdapterInterface;
 use QueueJitsu\Job\Adapter\StatusQueryInterface;
 use QueueJitsu\Job\Strategy\StrategyInterface;
@@ -43,18 +43,18 @@ class JobManager implements EventManagerAwareInterface
 {
     use EventManagerAwareTrait;
 
-    const COMPLETED_STATUSES = [
+    public const COMPLETED_STATUSES = [
         self::STATUS_FAILED,
         self::STATUS_COMPLETE,
     ];
 
-    const STATUS_COMPLETE = 4;
+    public const STATUS_COMPLETE = 4;
 
-    const STATUS_FAILED = 3;
+    public const STATUS_FAILED = 3;
 
-    const STATUS_RUNNING = 2;
+    public const STATUS_RUNNING = 2;
 
-    const STATUS_WAITING = 1;
+    public const STATUS_WAITING = 1;
 
     /**
      * @var \QueueJitsu\Job\Adapter\AdapterInterface $adapter
@@ -99,7 +99,7 @@ class JobManager implements EventManagerAwareInterface
 
             $this->getEventManager()->trigger('beforePerform', $job);
 
-            if (method_exists($jobInstance, 'setUp')) {
+            if (\method_exists($jobInstance, 'setUp')) {
                 $jobInstance->setUp();
             }
 
@@ -107,17 +107,17 @@ class JobManager implements EventManagerAwareInterface
 
             $jobInstance(...$args);
 
-            if (method_exists($jobInstance, 'tearDown')) {
+            if (\method_exists($jobInstance, 'tearDown')) {
                 $jobInstance->tearDown();
             }
 
             $this->getEventManager()->trigger('afterPerform', $job);
         } /** @noinspection PhpRedundantCatchClauseInspection */ catch (DontPerform $e) {
-            $this->log->debug(sprintf('Job %s triggered a DontPerform', $job->getId()));
+            $this->log->debug(\sprintf('Job %s triggered a DontPerform', $job->getId()));
             // Don't Perform this job triggered
         } catch (Throwable $e) {
             $this->log->error(
-                sprintf(
+                \sprintf(
                     '%s failed %s',
                     $job->getId(),
                     $e->getMessage()
@@ -145,7 +145,7 @@ class JobManager implements EventManagerAwareInterface
 
         $this->updateStatus($job, self::STATUS_FAILED);
 
-        $this->createFailure($job->getPayload(), $e, $job->getWorker(), $job->getQueue());
+        $this->createFailure($job, $e);
     }
 
     /**
@@ -162,14 +162,12 @@ class JobManager implements EventManagerAwareInterface
     /**
      * createFailure
      *
-     * @param array $payload
+     * @param \QueueJitsu\Job\Job $job
      * @param \Throwable $exception
-     * @param string $worker
-     * @param string $queue
      */
-    private function createFailure(array $payload, Throwable $exception, string $worker, string $queue)
+    private function createFailure(Job $job, Throwable $exception)
     {
-        $this->adapter->createFailure($payload, $exception, $worker, $queue);
+        $this->adapter->createFailure($job, $exception);
     }
 
     /**
@@ -188,16 +186,16 @@ class JobManager implements EventManagerAwareInterface
      *
      * @param string $guid
      *
-     * @return array
+     * @throws \QueueJitsu\Exception\NotImplemented
      *
-     * @throws \QueueJitsu\Exception\StatusQueryNotImplemented
+     * @return array
      */
-    public function getStatus(string $guid)
+    public function getStatus(string $guid): array
     {
-        if ($this->adapter instanceof StatusQueryInterface) {
-            return $this->adapter->getStatus($guid);
+        if (!$this->adapter instanceof StatusQueryInterface) {
+            throw new NotImplemented('Querying of Statuses not available in this implementation');
         }
 
-        throw new StatusQueryNotImplemented('Querying of Statuses not available in this implementation');
+        return $this->adapter->getStatus($guid);
     }
 }

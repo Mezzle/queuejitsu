@@ -42,10 +42,10 @@ class WorkerFactory
      *
      * @param \Psr\Container\ContainerInterface $container
      *
-     * @return \Closure
-     *
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
+     *
+     * @return \Closure
      */
     public function __invoke(ContainerInterface $container)
     {

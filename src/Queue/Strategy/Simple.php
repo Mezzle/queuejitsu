@@ -60,17 +60,17 @@ class Simple implements StrategyInterface
      */
     public function reserve(array $queues, AdapterInterface $adapter): ?Job
     {
-        if (in_array('*', $queues, true)) {
+        if (\in_array('*', $queues, true)) {
             $queues = $adapter->getAllQueueNames();
         }
 
         foreach ($queues as $queue) {
-            $this->log->debug(sprintf('Checking %s', $queue));
+            $this->log->debug(\sprintf('Checking %s', $queue));
 
             $job = $adapter->reserve($queue);
 
-            if (!is_null($job)) {
-                $this->log->debug(sprintf('Found job on %s', $queue));
+            if (!\is_null($job)) {
+                $this->log->debug(\sprintf('Found job on %s', $queue));
 
                 return $job;
             }

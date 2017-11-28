@@ -71,7 +71,7 @@ class Job
         $this->class = $class;
         $this->args = $args;
 
-        if (is_null($id)) {
+        if (\is_null($id)) {
             $id = Uuid::uuid4()->toString();
         }
 

@@ -31,6 +31,6 @@ use InvalidArgumentException;
  *
  * @package QueueJitsu\Exception
  */
-class InvalidQueueException extends InvalidArgumentException
+class InvalidQueue extends InvalidArgumentException
 {
 }

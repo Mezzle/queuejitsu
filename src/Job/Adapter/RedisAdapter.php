@@ -55,26 +55,28 @@ class RedisAdapter implements StatusQueryInterface
     /**
      * createFailure
      *
-     * @param array $payload
+     * @param \QueueJitsu\Job\Job $job
      * @param \Throwable $exception
-     * @param string $worker
-     * @param string $queue
      */
-    public function createFailure(array $payload, Throwable $exception, string $worker, string $queue): void
+    public function createFailure(Job $job, Throwable $exception): void
     {
+        $payload = $job->getPayload();
+        $worker = $job->getWorker();
+        $queue = $job->getQueue();
+
         $data = [];
-        $data['failed_at'] = strftime('%a %b %d %H:%M:%S %Z %Y');
+        $data['failed_at'] = \strftime('%a %b %d %H:%M:%S %Z %Y');
         $data['payload'] = $payload;
-        $data['exception'] = get_class($exception);
+        $data['exception'] = \get_class($exception);
         $data['error'] = $exception->getMessage();
-        $data['backtrace'] = explode("\n", $exception->getTraceAsString());
+        $data['backtrace'] = \explode("\n", $exception->getTraceAsString());
         $data['worker'] = $worker;
         $data['queue'] = $queue;
 
         $this->client->setex(
-            sprintf('failed:%s', $payload['id']),
+            \sprintf('failed:%s', $payload['id']),
             3600 * 14,
-            json_encode($data)
+            \json_encode($data)
         );
     }
 
@@ -90,9 +92,9 @@ class RedisAdapter implements StatusQueryInterface
         $this->client->sadd('queue', [$queue]);
 
         $this->client->rpush(
-            sprintf('queue:%s', $queue),
+            \sprintf('queue:%s', $queue),
             [
-                json_encode($job->getPayload()),
+                \json_encode($job->getPayload()),
             ]
         );
     }
@@ -109,11 +111,11 @@ class RedisAdapter implements StatusQueryInterface
         // Normalise
         $guid = Uuid::fromString($guid)->toString();
 
-        $key = sprintf('job:%s:status', $guid);
+        $key = \sprintf('job:%s:status', $guid);
 
         $status_packet = $this->client->get($key);
 
-        return json_decode($status_packet, true);
+        return \json_decode($status_packet, true);
     }
 
     /**
@@ -124,15 +126,15 @@ class RedisAdapter implements StatusQueryInterface
      */
     public function updateStatus(Job $job, int $status): void
     {
-        $id = sprintf('job:%s:status', $job->getId());
+        $id = \sprintf('job:%s:status', $job->getId());
         $packet = [
             'status' => $status,
-            'updated' => time(),
+            'updated' => \time(),
         ];
 
-        $this->client->set($id, json_encode($packet));
+        $this->client->set($id, \json_encode($packet));
 
-        if (in_array($status, JobManager::COMPLETED_STATUSES, false)) {
+        if (\in_array($status, JobManager::COMPLETED_STATUSES, false)) {
             $this->client->expire($id, 86400);
         }
     }
