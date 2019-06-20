@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright (c) 2017 Martin Meredith
  * Copyright (c) 2017 Stickee Technology Limited
@@ -25,8 +27,6 @@
 namespace QueueJitsu\Queue;
 
 use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface as Logger;
-use Psr\Log\NullLogger;
 use QueueJitsu\Queue\Adapter\AdapterInterface;
 use QueueJitsu\Queue\Strategy\Simple;
 use QueueJitsu\Queue\Strategy\StrategyInterface as Strategy;
@@ -43,10 +43,10 @@ class QueueManagerFactory
      *
      * @param \Psr\Container\ContainerInterface $container
      *
-     * @return \Closure
-     *
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
+     *
+     * @return \Closure
      */
     public function __invoke(ContainerInterface $container)
     {

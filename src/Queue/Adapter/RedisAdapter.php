@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright (c) 2017 Martin Meredith
  * Copyright (c) 2017 Stickee Technology Limited
@@ -25,7 +27,6 @@
 namespace QueueJitsu\Queue\Adapter;
 
 use Predis\Client;
-use Psr\Log\LoggerInterface;
 use QueueJitsu\Job\Job;
 
 /**

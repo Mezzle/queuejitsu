@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright (c) 2017 Martin Meredith
  * Copyright (c) 2017 Stickee Technology Limited
@@ -24,7 +26,6 @@
 
 namespace QueueJitsu\Queue;
 
-use Psr\Log\LoggerInterface;
 use QueueJitsu\Job\Job;
 use QueueJitsu\Queue\Adapter\AdapterInterface;
 use QueueJitsu\Queue\Strategy\StrategyInterface;
@@ -83,7 +84,7 @@ class QueueManager
      *
      * @return null|\QueueJitsu\Job\Job
      */
-    public function reserve(): ? Job
+    public function reserve(): ?Job
     {
         return $this->strategy->reserve($this->queues, $this->adapter);
     }

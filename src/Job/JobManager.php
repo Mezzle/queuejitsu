@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright (c) 2017 Martin Meredith
  * Copyright (c) 2017 Stickee Technology Limited
@@ -160,19 +162,6 @@ class JobManager implements EventManagerAwareInterface
     }
 
     /**
-     * createFailure
-     *
-     * @param array $payload
-     * @param \Throwable $exception
-     * @param string $worker
-     * @param string $queue
-     */
-    private function createFailure(array $payload, Throwable $exception, string $worker, string $queue)
-    {
-        $this->adapter->createFailure($payload, $exception, $worker, $queue);
-    }
-
-    /**
      * enqueue
      *
      * @param \QueueJitsu\Job\Job $job
@@ -188,9 +177,9 @@ class JobManager implements EventManagerAwareInterface
      *
      * @param string $guid
      *
-     * @return array
-     *
      * @throws \QueueJitsu\Exception\StatusQueryNotImplemented
+     *
+     * @return array
      */
     public function getStatus(string $guid)
     {
@@ -199,5 +188,18 @@ class JobManager implements EventManagerAwareInterface
         }
 
         throw new StatusQueryNotImplemented('Querying of Statuses not available in this implementation');
+    }
+
+    /**
+     * createFailure
+     *
+     * @param array $payload
+     * @param \Throwable $exception
+     * @param string $worker
+     * @param string $queue
+     */
+    private function createFailure(array $payload, Throwable $exception, string $worker, string $queue)
+    {
+        $this->adapter->createFailure($payload, $exception, $worker, $queue);
     }
 }

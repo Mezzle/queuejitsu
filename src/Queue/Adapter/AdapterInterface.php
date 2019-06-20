@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright (c) 2017 Martin Meredith
  * Copyright (c) 2017 Stickee Technology Limited
@@ -40,7 +42,7 @@ interface AdapterInterface
      *
      * @return null|\QueueJitsu\Job\Job
      */
-    public function reserve(string $queue): ? Job;
+    public function reserve(string $queue): ?Job;
 
     /**
      * getAllQueueNames

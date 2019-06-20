@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Copyright (c) 2017 Martin Meredith
  * Copyright (c) 2017 Stickee Technology Limited
@@ -100,11 +102,33 @@ abstract class AbstractWorker implements EventManagerAwareInterface
     }
 
     /**
-     * workingOn
+     * __invoke
      *
-     * @return string
+     * @param int $interval
      */
-    abstract protected function getWorkerIdentifier(): string;
+    public function __invoke($interval = 5)
+    {
+        $this->interval = $interval;
+
+        $this->updateProcLine('Starting');
+        $this->startup();
+
+        while (true) {
+            if ($this->finish) {
+                break;
+            }
+
+            if ($this->paused) {
+                $this->sleep();
+
+                continue;
+            }
+
+            $this->loop();
+        }
+
+        $this->manager->unregisterWorker($this->getId());
+    }
 
     /**
      * continueProcessing
@@ -172,34 +196,21 @@ abstract class AbstractWorker implements EventManagerAwareInterface
     }
 
     /**
-     * __invoke
+     * getId
      *
-     * @param int $interval
-     *
+     * @return string
      */
-    public function __invoke($interval = 5)
+    public function getId(): string
     {
-        $this->interval = $interval;
-
-        $this->updateProcLine('Starting');
-        $this->startup();
-
-        while (true) {
-            if ($this->finish) {
-                break;
-            }
-
-            if ($this->paused) {
-                $this->sleep();
-
-                continue;
-            }
-
-            $this->loop();
-        }
-
-        $this->manager->unregisterWorker($this->getId());
+        return $this->id;
     }
+
+    /**
+     * workingOn
+     *
+     * @return string
+     */
+    abstract protected function getWorkerIdentifier(): string;
 
     /**
      * updateProcLine
@@ -274,7 +285,6 @@ abstract class AbstractWorker implements EventManagerAwareInterface
 
     /**
      * sleep
-     *
      */
     protected function sleep(): void
     {
@@ -289,19 +299,8 @@ abstract class AbstractWorker implements EventManagerAwareInterface
 
     /**
      * loop
-     *
      */
     abstract protected function loop(): void;
-
-    /**
-     * getId
-     *
-     * @return string
-     */
-    public function getId(): string
-    {
-        return $this->id;
-    }
 
     /**
      * finishedWorking
@@ -314,9 +313,9 @@ abstract class AbstractWorker implements EventManagerAwareInterface
     /**
      * fork
      *
-     * @return bool|int
-     *
      * @throws \QueueJitsu\Exception\ForkFailureException
+     *
+     * @return bool|int
      */
     protected function fork()
     {

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright (c) 2017 Martin Meredith
  * Copyright (c) 2017 Stickee Technology Limited
@@ -36,7 +38,7 @@ interface StrategyInterface
      *
      * @param string $class
      *
-     * @return Callable
+     * @return callable
      */
     public function getJobInstance(string $class): callable;
 }

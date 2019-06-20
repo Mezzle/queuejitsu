@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright (c) 2017 Martin Meredith
  * Copyright (c) 2017 Stickee Technology Limited
@@ -37,12 +39,6 @@ use QueueJitsu\Queue\QueueManager;
  */
 class Worker extends AbstractWorker
 {
-
-    /**
-     * @var Job|null $current_job
-     */
-    private $current_job;
-
     /**
      * @var \QueueJitsu\Job\JobManager $job_manager
      */
@@ -52,6 +48,11 @@ class Worker extends AbstractWorker
      * @var \QueueJitsu\Queue\QueueManager $queue_manager
      */
     protected $queue_manager;
+
+    /**
+     * @var Job|null $current_job
+     */
+    private $current_job;
 
     /**
      * Worker constructor.
@@ -85,7 +86,6 @@ class Worker extends AbstractWorker
 
     /**
      * finishedWorking
-     *
      */
     protected function finishedWorking(): void
     {

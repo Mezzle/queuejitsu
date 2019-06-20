@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright (c) 2017 Martin Meredith
  * Copyright (c) 2017 Stickee Technology Limited
@@ -53,10 +55,10 @@ class ContainerStrategy implements StrategyInterface
      *
      * @param string $class
      *
-     * @return Callable
-     *
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
+     *
+     * @return callable
      */
     public function getJobInstance(string $class): callable
     {

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright (c) 2017 Martin Meredith
  * Copyright (c) 2017 Stickee Technology Limited
@@ -42,5 +44,5 @@ interface StrategyInterface
      *
      * @return null|\QueueJitsu\Job\Job
      */
-    public function reserve(array $queues, AdapterInterface $adapter): ? Job;
+    public function reserve(array $queues, AdapterInterface $adapter): ?Job;
 }
