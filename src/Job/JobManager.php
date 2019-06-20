@@ -27,6 +27,7 @@ declare(strict_types=1);
 namespace QueueJitsu\Job;
 
 use Psr\Log\LoggerInterface;
+use QueueJitsu\Exception\Deprecated;
 use QueueJitsu\Exception\DontPerform;
 use QueueJitsu\Exception\StatusQueryNotImplemented;
 use QueueJitsu\Job\Adapter\AdapterInterface;
@@ -101,7 +102,15 @@ class JobManager implements EventManagerAwareInterface
 
             $this->getEventManager()->trigger('beforePerform', $job);
 
-            if (method_exists($jobInstance, 'setUp')) {
+            if (!$jobInstance instanceof HasSetup && method_exists($jobInstance, 'setUp')) {
+                throw new Deprecated('Use of setUp function without \QueueJitsu\Job\HasSetup Interface is deprecated');
+            }
+
+            if (!$jobInstance instanceof HasSetup && method_exists($jobInstance, 'tearDown')) {
+                throw new Deprecated('Use of setUp function without \QueueJitsu\Job\HasTearDown Interface is deprecated');
+            }
+
+            if ($jobInstance instanceof HasSetup) {
                 $jobInstance->setUp();
             }
 
@@ -109,7 +118,7 @@ class JobManager implements EventManagerAwareInterface
 
             $jobInstance(...$args);
 
-            if (method_exists($jobInstance, 'tearDown')) {
+            if ($jobInstance instanceof HasTearDown) {
                 $jobInstance->tearDown();
             }
 

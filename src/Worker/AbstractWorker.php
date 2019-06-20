@@ -336,7 +336,7 @@ abstract class AbstractWorker implements EventManagerAwareInterface
     /**
      * setTask
      *
-     * @param $data
+     * @param mixed $data
      */
     protected function setTask($data)
     {

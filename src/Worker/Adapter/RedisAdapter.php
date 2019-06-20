@@ -98,11 +98,11 @@ class RedisAdapter implements AdapterInterface
     /**
      * registerWorker
      *
-     * @param $worker
+     * @param string $worker
      */
-    public function registerWorker($worker): void
+    public function registerWorker(string $worker): void
     {
-        $this->client->sadd('workers', $worker);
+        $this->client->sadd('workers', [$worker]);
         $this->client->set(
             sprintf('worker:%s:started', $worker),
             strftime('%a %b %d %H:%M:%S %Z %Y')
@@ -113,7 +113,7 @@ class RedisAdapter implements AdapterInterface
      * setTask
      *
      * @param \QueueJitsu\Worker\AbstractWorker $worker
-     * @param $data
+     * @param mixed $data
      */
     public function setTask(AbstractWorker $worker, $data): void
     {
@@ -125,9 +125,9 @@ class RedisAdapter implements AdapterInterface
     /**
      * unregisterWorker
      *
-     * @param $id
+     * @param string $id
      */
-    public function unregisterWorker($id): void
+    public function unregisterWorker(string $id): void
     {
         $this->client->srem('workers', $id);
         $worker_key = sprintf('worker:%s', $id);
@@ -139,9 +139,9 @@ class RedisAdapter implements AdapterInterface
     /**
      * deleteStats
      *
-     * @param $worker
+     * @param string $worker
      */
-    private function deleteStats($worker)
+    private function deleteStats(string $worker)
     {
         $processed = sprintf('processed:%s', $worker);
         $failed = sprintf('failed:%s', $worker);

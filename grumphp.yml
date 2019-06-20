@@ -22,12 +22,6 @@ parameters:
       - cleancode
       - codesize
     phpmnd: ~
-    phpparser:
-      visitors:
-        forbidden_function_calls:
-          blacklist:
-            - 'var_dump'
-        no_exit_statements: ~
     phpstan:
       level: 7
     phpversion:

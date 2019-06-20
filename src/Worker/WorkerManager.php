@@ -137,7 +137,7 @@ class WorkerManager
      * setTask
      *
      * @param \QueueJitsu\Worker\AbstractWorker $worker
-     * @param $data
+     * @param mixed $data
      */
     public function setTask(AbstractWorker $worker, $data): void
     {

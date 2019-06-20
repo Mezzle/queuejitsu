@@ -45,22 +45,22 @@ interface AdapterInterface
     /**
      * unregisterWorker
      *
-     * @param $id
+     * @param string $id
      */
-    public function unregisterWorker($id): void;
+    public function unregisterWorker(string $id): void;
 
     /**
      * registerWorker
      *
-     * @param $worker
+     * @param string $worker
      */
-    public function registerWorker($worker): void;
+    public function registerWorker(string $worker): void;
 
     /**
      * setTask
      *
      * @param \QueueJitsu\Worker\AbstractWorker $worker
-     * @param $data
+     * @param mixed $data
      */
     public function setTask(AbstractWorker $worker, $data): void;
 
