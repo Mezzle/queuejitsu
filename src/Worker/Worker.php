@@ -145,7 +145,7 @@ class Worker extends AbstractWorker
      *
      * @param \QueueJitsu\Job\Job $job
      */
-    private function setWorkingOn(Job $job)
+    private function setWorkingOn(Job $job): void
     {
         $this->setTask(
             [
@@ -167,7 +167,8 @@ class Worker extends AbstractWorker
      */
     private function runAsChild(Job $job): void
     {
-        $status = sprintf('Processing ID: %s in %s', $job->getId(), $job->getQueue());
+        $status =
+            sprintf('Processing ID: %s in %s', $job->getId(), $job->getQueue());
         $this->updateProcLine($status);
 
         $this->log->info($status);
@@ -197,6 +198,8 @@ class Worker extends AbstractWorker
                 'job_id' => $job->getId(),
             ]
         );
+
+        $wait_status = null;
 
         pcntl_wait($wait_status);
         $exit_status = pcntl_wexitstatus($wait_status);

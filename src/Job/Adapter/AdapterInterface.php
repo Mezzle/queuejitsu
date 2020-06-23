@@ -52,7 +52,12 @@ interface AdapterInterface
      * @param string $worker
      * @param string $queue
      */
-    public function createFailure(array $payload, Throwable $exception, string $worker, string $queue): void;
+    public function createFailure(
+        array $payload,
+        Throwable $exception,
+        string $worker,
+        string $queue
+    ): void;
 
     /**
      * enqueue

@@ -52,7 +52,7 @@ abstract class AbstractWorker implements EventManagerAwareInterface
     protected $finish = false;
 
     /**
-     * @var string $hostname
+     * @var string|false $hostname
      */
     protected $hostname;
 
@@ -97,7 +97,8 @@ abstract class AbstractWorker implements EventManagerAwareInterface
         $this->log = $log;
         $this->hostname = gethostname();
         $this->worker_name = sprintf('%s:%d', $this->hostname, getmypid());
-        $this->id = sprintf('%s:%s', $this->worker_name, $this->getWorkerIdentifier());
+        $this->id =
+            sprintf('%s:%s', $this->worker_name, $this->getWorkerIdentifier());
         $this->manager = $manager;
     }
 
@@ -106,7 +107,7 @@ abstract class AbstractWorker implements EventManagerAwareInterface
      *
      * @param int $interval
      */
-    public function __invoke($interval = 5)
+    public function __invoke($interval = 5): void
     {
         $this->interval = $interval;
 
@@ -128,6 +129,16 @@ abstract class AbstractWorker implements EventManagerAwareInterface
         }
 
         $this->manager->unregisterWorker($this->getId());
+    }
+
+    /**
+     * getId
+     *
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->id;
     }
 
     /**
@@ -180,29 +191,29 @@ abstract class AbstractWorker implements EventManagerAwareInterface
 
         $this->log->debug(sprintf('Finding child at %d', $this->child));
 
+        $output = null;
+        $return_code = null;
+
         // Check if pid is running
-        $executed = exec(sprintf('ps -o pid,state -p %d', $this->child), $output, $return_code);
+        $executed =
+            exec(
+                sprintf('ps -o pid,state -p %d', $this->child),
+                $output,
+                $return_code
+            );
 
         if ($executed && $return_code !== 1) {
             $this->log->debug(sprintf('Killing child at %d', $this->child));
-            posix_kill($this->child, SIGKILL);
+            posix_kill((int)$this->child, SIGKILL);
             $this->child = null;
 
             return;
         }
 
-        $this->log->error(sprintf('Child %d not found, restarting', $this->child));
+        $this->log->error(
+            sprintf('Child %d not found, restarting', $this->child)
+        );
         $this->shutdown();
-    }
-
-    /**
-     * getId
-     *
-     * @return string
-     */
-    public function getId(): string
-    {
-        return $this->id;
     }
 
     /**
@@ -220,7 +231,9 @@ abstract class AbstractWorker implements EventManagerAwareInterface
     protected function updateProcLine(string $status): void
     {
         if (function_exists('cli_set_process_title')) {
-            cli_set_process_title(sprintf('qjitsu-%s: %s', $this->getWorkerType(), $status));
+            cli_set_process_title(
+                sprintf('qjitsu-%s: %s', $this->getWorkerType(), $status)
+            );
         }
     }
 
@@ -237,7 +250,7 @@ abstract class AbstractWorker implements EventManagerAwareInterface
     /**
      * startup
      */
-    protected function startup()
+    protected function startup(): void
     {
         $this->log->info(sprintf('Starting worker %s', $this->id));
 
@@ -256,7 +269,9 @@ abstract class AbstractWorker implements EventManagerAwareInterface
     protected function registerSignalHandlers(): bool
     {
         if (!function_exists('pcntl_signal')) {
-            $this->log->warning('Signal Handling is not supported on this system');
+            $this->log->warning(
+                'Signal Handling is not supported on this system'
+            );
 
             return false;
         }
@@ -338,7 +353,7 @@ abstract class AbstractWorker implements EventManagerAwareInterface
      *
      * @param mixed $data
      */
-    protected function setTask($data)
+    protected function setTask($data): void
     {
         $this->manager->setTask($this, $data);
     }

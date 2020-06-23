@@ -45,14 +45,13 @@ class JobManagerFactory
      *
      * @param \Psr\Container\ContainerInterface $container
      *
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     *
      * @return \QueueJitsu\Job\JobManager
      */
     public function __invoke(ContainerInterface $container)
     {
-        $logger_class = $container->has(LoggerInterface::class) ? LoggerInterface::class : NullLogger::class;
+        $logger_class =
+            $container->has(LoggerInterface::class) ? LoggerInterface::class :
+                NullLogger::class;
 
         $logger = $container->get($logger_class);
 

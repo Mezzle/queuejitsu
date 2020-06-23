@@ -1,57 +1,63 @@
 {
-    "name": "mez/queuejitsu",
-    "description": "A Modern Queueing System",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Martin Meredith",
-            "email": "martin@sourceguru.net"
-        }
-    ],
-    "config": {
-        "sort-packages": true,
-        "optimize-autoloader": true,
-        "preferred-install": {
-            "stickee/*": "source",
-            "*": "dist"
-        }
-    },
-    "require": {
-        "php": "^7.1",
-        "ext-json": "*",
-        "psr/container": "^1.0",
-        "psr/log": "^1.0",
-        "ramsey/uuid": "^3.7",
-        "zendframework/zend-eventmanager": "^3.2"
-    },
-    "suggest": {
-        "predis/predis": "Connect up to Redis",
-        "ext-pcntl": "Allows Workers to be ran in forked processes",
-        "mez/queuejitsu-cli": "Command Line integration"
-    },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "~2",
-        "jakub-onderka/php-parallel-lint": "^0.9.2 || ^1.0.0",
-        "nikic/php-parser": "^3.1",
-        "phpmd/phpmd": "^2.6",
-        "phpro/grumphp": "^0.11.6 || ^0.15.0 || ^0.16.0",
-        "phpstan/phpstan": "^0.8.3 || ^0.9.0",
-        "povils/phpmnd": "^1.1 || ^2.0",
-        "predis/predis": "^1.1",
-        "roave/security-advisories": "dev-master",
-        "sebastian/phpcpd": "^3.0 || ^4.0",
-        "sensiolabs/security-checker": "^4.1 || ^6.0",
-        "squizlabs/php_codesniffer": "^3.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "QueueJitsu\\": "src"
-        }
-    },
-    "extra": {
-        "zf": {
-            "config-provider": "QueueJitsu\\ConfigProvider"
-        }
+  "name": "mez/queuejitsu",
+  "type": "library",
+  "description": "A Modern Queueing System",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Martin Meredith",
+      "email": "martin@sourceguru.net"
     }
+  ],
+  "require": {
+    "php": "^7.1",
+    "ext-json": "*",
+    "ext-pcntl": "^7.2",
+    "ext-posix": "^7.2",
+    "phpstan/phpstan": "^0.12.30",
+    "predis/predis": "^1.1",
+    "psr/container": "^1.0",
+    "psr/log": "^1.0",
+    "ramsey/uuid": "^3.7",
+    "zendframework/zend-eventmanager": "^3.2"
+  },
+  "require-dev": {
+    "ergebnis/composer-normalize": "^2.5",
+    "friendsofphp/php-cs-fixer": "~2",
+    "maglnet/composer-require-checker": "^2.1",
+    "nikic/php-parser": "^4.5",
+    "php-parallel-lint/php-parallel-lint": "^1.2",
+    "phpro/grumphp-shim": "^0.19.0",
+    "phpunit/phpunit": "^8.5",
+    "roave/security-advisories": "dev-master",
+    "sensiolabs/security-checker": "^6.0",
+    "squizlabs/php_codesniffer": "^3.5"
+  },
+  "suggest": {
+    "ext-pcntl": "Allows Workers to be ran in forked processes",
+    "mez/queuejitsu-cli": "Command Line integration",
+    "predis/predis": "Connect up to Redis"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": {
+      "stickee/*": "source",
+      "*": "dist"
+    },
+    "sort-packages": true
+  },
+  "extra": {
+    "zf": {
+      "config-provider": "QueueJitsu\\ConfigProvider"
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "QueueJitsu\\": "src"
+    }
+  },
+  "scripts": {
+    "cs-check": "php-cs-fixer --allow-risky=yes --config=.php_cs --dry-run --verbose fix",
+    "cs-fix": "php-cs-fixer --allow-risky=yes --config=.php_cs --verbose fix"
+  }
 }

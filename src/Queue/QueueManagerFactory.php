@@ -43,14 +43,12 @@ class QueueManagerFactory
      *
      * @param \Psr\Container\ContainerInterface $container
      *
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     *
      * @return \Closure
      */
     public function __invoke(ContainerInterface $container)
     {
-        $strategy_class = $container->has(Strategy::class) ? Strategy::class : Simple::class;
+        $strategy_class =
+            $container->has(Strategy::class) ? Strategy::class : Simple::class;
         $strategy = $container->get($strategy_class);
 
         $adapter = $container->get(AdapterInterface::class);

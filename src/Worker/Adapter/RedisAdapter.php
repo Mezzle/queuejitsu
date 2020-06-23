@@ -141,7 +141,7 @@ class RedisAdapter implements AdapterInterface
      *
      * @param string $worker
      */
-    private function deleteStats(string $worker)
+    private function deleteStats(string $worker): void
     {
         $processed = sprintf('processed:%s', $worker);
         $failed = sprintf('failed:%s', $worker);

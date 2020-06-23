@@ -62,8 +62,12 @@ class RedisAdapter implements StatusQueryInterface
      * @param string $worker
      * @param string $queue
      */
-    public function createFailure(array $payload, Throwable $exception, string $worker, string $queue): void
-    {
+    public function createFailure(
+        array $payload,
+        Throwable $exception,
+        string $worker,
+        string $queue
+    ): void {
         $data = [];
         $data['failed_at'] = strftime('%a %b %d %H:%M:%S %Z %Y');
         $data['payload'] = $payload;

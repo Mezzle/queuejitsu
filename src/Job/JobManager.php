@@ -81,8 +81,11 @@ class JobManager implements EventManagerAwareInterface
      * @param \QueueJitsu\Job\Adapter\AdapterInterface $adapter
      * @param \QueueJitsu\Job\Strategy\StrategyInterface $strategy
      */
-    public function __construct(LoggerInterface $log, AdapterInterface $adapter, StrategyInterface $strategy)
-    {
+    public function __construct(
+        LoggerInterface $log,
+        AdapterInterface $adapter,
+        StrategyInterface $strategy
+    ) {
         $this->log = $log;
         $this->adapter = $adapter;
         $this->strategy = $strategy;
@@ -93,7 +96,7 @@ class JobManager implements EventManagerAwareInterface
      *
      * @param \QueueJitsu\Job\Job $job
      */
-    public function run(Job $job)
+    public function run(Job $job): void
     {
         $this->getEventManager()->trigger('afterFork', $job);
 
@@ -102,12 +105,18 @@ class JobManager implements EventManagerAwareInterface
 
             $this->getEventManager()->trigger('beforePerform', $job);
 
-            if (!$jobInstance instanceof HasSetup && method_exists($jobInstance, 'setUp')) {
-                throw new Deprecated('Use of setUp function without \QueueJitsu\Job\HasSetup Interface is deprecated');
+            if (!$jobInstance instanceof HasSetup &&
+                method_exists($jobInstance, 'setUp')) {
+                throw new Deprecated(
+                    'Use of setUp function without \QueueJitsu\Job\HasSetup Interface is deprecated'
+                );
             }
 
-            if (!$jobInstance instanceof HasSetup && method_exists($jobInstance, 'tearDown')) {
-                throw new Deprecated('Use of setUp function without \QueueJitsu\Job\HasTearDown Interface is deprecated');
+            if (!$jobInstance instanceof HasSetup &&
+                method_exists($jobInstance, 'tearDown')) {
+                throw new Deprecated(
+                    'Use of setUp function without \QueueJitsu\Job\HasTearDown Interface is deprecated'
+                );
             }
 
             if ($jobInstance instanceof HasSetup) {
@@ -123,8 +132,10 @@ class JobManager implements EventManagerAwareInterface
             }
 
             $this->getEventManager()->trigger('afterPerform', $job);
-        } /** @noinspection PhpRedundantCatchClauseInspection */ catch (DontPerform $e) {
-            $this->log->debug(sprintf('Job %s triggered a DontPerform', $job->getId()));
+        } catch (DontPerform $e) {
+            $this->log->debug(
+                sprintf('Job %s triggered a DontPerform', $job->getId())
+            );
             // Don't Perform this job triggered
         } catch (Throwable $e) {
             $this->log->error(
@@ -150,13 +161,18 @@ class JobManager implements EventManagerAwareInterface
      * @param \QueueJitsu\Job\Job $job
      * @param \Throwable $e
      */
-    public function failJob(Job $job, Throwable $e)
+    public function failJob(Job $job, Throwable $e): void
     {
         $this->getEventManager()->trigger('onFailure', $job, [$e]);
 
         $this->updateStatus($job, self::STATUS_FAILED);
 
-        $this->createFailure($job->getPayload(), $e, $job->getWorker(), $job->getQueue());
+        $this->createFailure(
+            $job->getPayload(),
+            $e,
+            $job->getWorker(),
+            $job->getQueue()
+        );
     }
 
     /**
@@ -165,7 +181,7 @@ class JobManager implements EventManagerAwareInterface
      * @param \QueueJitsu\Job\Job $job
      * @param int $status
      */
-    public function updateStatus(Job $job, int $status)
+    public function updateStatus(Job $job, int $status): void
     {
         $this->adapter->updateStatus($job, $status);
     }
@@ -196,7 +212,9 @@ class JobManager implements EventManagerAwareInterface
             return $this->adapter->getStatus($guid);
         }
 
-        throw new StatusQueryNotImplemented('Querying of Statuses not available in this implementation');
+        throw new StatusQueryNotImplemented(
+            'Querying of Statuses not available in this implementation'
+        );
     }
 
     /**
@@ -207,8 +225,12 @@ class JobManager implements EventManagerAwareInterface
      * @param string $worker
      * @param string $queue
      */
-    private function createFailure(array $payload, Throwable $exception, string $worker, string $queue)
-    {
+    private function createFailure(
+        array $payload,
+        Throwable $exception,
+        string $worker,
+        string $queue
+    ): void {
         $this->adapter->createFailure($payload, $exception, $worker, $queue);
     }
 }

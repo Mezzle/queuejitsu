@@ -44,24 +44,32 @@ class WorkerFactory
      *
      * @param \Psr\Container\ContainerInterface $container
      *
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     *
-     * @return \Closure
+     * @return callable
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): callable
     {
-        $logger_class = $container->has(Logger::class) ? Logger::class : NullLogger::class;
+        $logger_class =
+            $container->has(Logger::class) ? Logger::class : NullLogger::class;
 
         $logger = $container->get($logger_class);
         $job_manager = $container->get(JobManager::class);
         $queue_manager_factory = $container->get(QueueManager::class);
         $worker_manager = $container->get(WorkerManager::class);
 
-        return function ($queues) use ($logger, $job_manager, $queue_manager_factory, $worker_manager) {
+        return function ($queues) use (
+            $logger,
+            $job_manager,
+            $queue_manager_factory,
+            $worker_manager
+        ) {
             $queue_manager = $queue_manager_factory($queues);
 
-            return new Worker($logger, $worker_manager, $queue_manager, $job_manager);
+            return new Worker(
+                $logger,
+                $worker_manager,
+                $queue_manager,
+                $job_manager
+            );
         };
     }
 }

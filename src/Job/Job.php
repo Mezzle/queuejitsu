@@ -68,8 +68,12 @@ class Job
      * @param array $args
      * @param string|null $id
      */
-    public function __construct(string $class, string $queue, array $args = [], $id = null)
-    {
+    public function __construct(
+        string $class,
+        string $queue,
+        array $args = [],
+        $id = null
+    ) {
         $this->class = $class;
         $this->args = $args;
 

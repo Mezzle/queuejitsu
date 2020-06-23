@@ -42,7 +42,7 @@ class WorkerManager
     private $adapter;
 
     /**
-     * @var string $hostname
+     * @var string|false $hostname
      */
     private $hostname;
 
@@ -75,7 +75,9 @@ class WorkerManager
         foreach ($workers as $worker) {
             [$host, $pid] = explode(':', $worker, 3);
 
-            if ($host !== $this->hostname || in_array($pid, $local_pids, false) || $pid === getmypid()) {
+            if ($host !== $this->hostname ||
+                in_array($pid, $local_pids, false) ||
+                (int)$pid === getmypid()) {
                 continue;
             }
             $this->log->debug(sprintf('Pruning dead worker: %s', $worker));

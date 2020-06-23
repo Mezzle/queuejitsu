@@ -1,29 +1,39 @@
-parameters:
-  git_dir: .
-  bin_dir: vendor/bin
+grumphp:
   tasks:
-    composer: ~
-    phpcpd:
-      exclude:
-      - vendor
-      - config
-      - test
-      - data
+    composer:
+      metadata:
+        priority: 1
+    composer_normalize:
+      indent_size: 2
+      indent_style: "space"
+      metadata:
+        priority: 0
+    composer_require_checker:
+      metadata:
+        priority: 1
+    jsonlint:
+      metadata:
+        priority: 2
     phpcsfixer2:
       config: .php_cs
       allow_risky: true
-    phplint: ~
-    phpmd:
-      exclude:
-      - vendor
-      - config
-      - test
-      ruleset:
-      - cleancode
-      - codesize
-    phpmnd: ~
+    phplint:
+      metadata:
+        priority: 2
     phpstan:
-      level: 7
+      metadata:
+        priority: 0
+      level: 8
     phpversion:
-      project: '7.1'
-    securitychecker: ~
+      project: '7.2'
+      metadata:
+        priority: 3
+    securitychecker:
+      metadata:
+        priority: 3
+    xmllint:
+      metadata:
+        priority: 2
+    yamllint:
+      metadata:
+        priority: 2
