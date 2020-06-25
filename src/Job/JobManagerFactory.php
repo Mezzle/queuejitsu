@@ -1,8 +1,6 @@
 <?php
-
-declare(strict_types=1);
-/**
- * Copyright (c) 2017 Martin Meredith
+/*
+ * Copyright (c) 2017 - 2020 Martin Meredith
  * Copyright (c) 2017 Stickee Technology Limited
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,6 +21,8 @@ declare(strict_types=1);
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+declare(strict_types=1);
 
 namespace QueueJitsu\Job;
 
@@ -49,17 +49,21 @@ class JobManagerFactory
      */
     public function __invoke(ContainerInterface $container)
     {
-        $logger_class =
-            $container->has(LoggerInterface::class) ? LoggerInterface::class :
-                NullLogger::class;
+        $logger_class = NullLogger::class;
+
+        if ($container->has(LoggerInterface::class)) {
+            $logger_class = LoggerInterface::class;
+        }
 
         $logger = $container->get($logger_class);
 
         $adapter = $container->get(AdapterInterface::class);
 
-        $strategy_class = $container->has(
-            StrategyInterface::class
-        ) ? StrategyInterface::class : ContainerStrategy::class;
+        $strategy_class = ContainerStrategy::class;
+
+        if ($container->has(StrategyInterface::class)) {
+            $strategy_class = StrategyInterface::class;
+        }
 
         $strategy = $container->get($strategy_class);
 
