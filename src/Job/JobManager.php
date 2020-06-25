@@ -26,6 +26,8 @@ declare(strict_types=1);
 
 namespace QueueJitsu\Job;
 
+use Laminas\EventManager\EventManagerAwareInterface;
+use Laminas\EventManager\EventManagerAwareTrait;
 use Psr\Log\LoggerInterface;
 use QueueJitsu\Exception\Deprecated;
 use QueueJitsu\Exception\DontPerform;
@@ -34,8 +36,6 @@ use QueueJitsu\Job\Adapter\AdapterInterface;
 use QueueJitsu\Job\Adapter\StatusQueryInterface;
 use QueueJitsu\Job\Strategy\StrategyInterface;
 use Throwable;
-use Zend\EventManager\EventManagerAwareInterface;
-use Zend\EventManager\EventManagerAwareTrait;
 
 /**
  * Class Runner

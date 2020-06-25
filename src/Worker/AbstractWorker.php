@@ -26,10 +26,10 @@ declare(strict_types=1);
 
 namespace QueueJitsu\Worker;
 
+use Laminas\EventManager\EventManagerAwareInterface;
+use Laminas\EventManager\EventManagerAwareTrait;
 use Psr\Log\LoggerInterface;
 use QueueJitsu\Exception\ForkFailureException;
-use Zend\EventManager\EventManagerAwareInterface;
-use Zend\EventManager\EventManagerAwareTrait;
 
 /**
  * Class AbstractWorker
