@@ -4,24 +4,23 @@ on: push
 jobs:
   grumphp:
     runs-on: ubuntu-latest
-    container: docker://php:${{ matrix.php_version }}-cli
-    continue-on-error: ${{ matrix.allow_fail }}
     strategy:
       matrix:
         php_version:
         - '7.2'
         - '7.3'
         - '7.4'
-        allow_fail: [false]
-        include:
-          - php_version: 8.0-rc
-            allow_fail: true
     steps:
       - uses: actions/checkout@v2
+      - name: Install PHP
+        run: |
+          sudo add-apt-repository ppa:ondej/php -y
+          sudo apt-get update
+          sudo apt-get install php${{ matrix.php_version }}
       - name: Install Extensions
         run: |
-          pecl install pcntl
-          pecl install posix
+          sudo apt-get install php${{ matrix.php_version }}-pcntl
+          sudo apt-get install php${{ matrix.php_version }}-posix
       - name: Install Composer
         run: |
           php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
