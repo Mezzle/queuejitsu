@@ -5,6 +5,7 @@ jobs:
   grumphp:
     runs-on: ubuntu-latest
     container: docker://php:${{ matrix.php_version }}-cli
+    continue-on-error: ${{ matrix.allow_fail }}
     strategy:
       matrix:
         php_version:
@@ -12,7 +13,10 @@ jobs:
         - '7.2'
         - '7.3'
         - '7.4'
-        - '8.0-rc'
+        allow_fail: false
+        include:
+          - php_version: 8.0-rc
+            allow_fail: true
     steps:
       - uses: actions/checkout@v2
       - name: Install Composer
