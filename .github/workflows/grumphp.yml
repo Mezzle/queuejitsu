@@ -5,7 +5,8 @@ jobs:
   grumphp:
     runs-on: ubuntu-latest
     strategy:
-      php: ['7.2', '7.3', '7.4']
+      matrix:
+        php: ['7.2', '7.3', '7.4']
     steps:
       - uses: actions/checkout@v2
       - name: Install PHP
