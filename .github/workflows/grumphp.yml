@@ -6,11 +6,16 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: ['7.2', '7.3', '7.4']
+        image:
+        - docker://php:7.1-cli
+        - docker://php:7.2-cli
+        - docker://php:7.3-cli
+        - docker://php:7.4-cli
+        - docker://php:8.0-cli
     steps:
       - uses: actions/checkout@v2
       - name: Install PHP
-        uses: docker://php:${{ matrix.php}}-cli
+        uses: ${{ matrix.image }}
       - name:
         run: |
           php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
