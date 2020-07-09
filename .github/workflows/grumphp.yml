@@ -19,6 +19,10 @@ jobs:
             allow_fail: true
     steps:
       - uses: actions/checkout@v2
+      - name: Install Extensions
+        run: |
+          pecl install pcntrl
+          pecl install posix
       - name: Install Composer
         run: |
           php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
