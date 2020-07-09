@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install Extensions
         run: |
-          pecl install pcntrl
+          pecl install pcntl
           pecl install posix
       - name: Install Composer
         run: |
