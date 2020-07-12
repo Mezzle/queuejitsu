@@ -229,7 +229,7 @@ abstract class AbstractWorker implements EventManagerAwareInterface
      */
     protected function updateProcLine(string $status): void
     {
-        if (function_exists('cli_set_process_title')) {
+        if (function_exists('cli_set_process_title') && posix_getuid() === 0) {
             cli_set_process_title(
                 sprintf('qjitsu-%s: %s', $this->getWorkerType(), $status)
             );
