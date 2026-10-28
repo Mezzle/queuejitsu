@@ -32,7 +32,7 @@ $finder->exclude('test_results');
 $finder->exclude('data');
 $finder->in(__DIR__);
 
-$config = Config::create();
+$config = new Config();
 
 $config->setRiskyAllowed(true);
 
@@ -43,14 +43,13 @@ $config->setRules(
         'array_indentation' => true,
         'array_syntax' => ['syntax' => 'short'],
         'binary_operator_spaces' => true,
-        'blank_line_after_opening_tag' => true,
+        'blank_line_after_opening_tag' => false,
         'blank_line_before_statement' => [
             'statements' => [
                 'case',
                 'continue',
                 'declare',
                 'default',
-                'die',
                 'do',
                 'exit',
                 'for',
@@ -66,10 +65,10 @@ $config->setRules(
             ],
         ],
         'cast_spaces' => ['space' => 'none'],
-        'class_attributes_separation' => ['elements' => ['method', 'property']],
+        'class_attributes_separation' => ['elements' => ['method' => 'one', 'property' => 'one']],
         'combine_consecutive_issets' => true,
         'combine_consecutive_unsets' => true,
-        'compact_nullable_typehint' => true,
+        'compact_nullable_type_declaration' => true,
         'concat_space' => ['spacing' => 'one'],
         'date_time_immutable' => true,
         'declare_equal_normalize' => true,
@@ -80,9 +79,9 @@ $config->setRules(
         'final_internal_class' => true,
         'fopen_flag_order' => true,
         'fopen_flags' => true,
-        'fully_qualified_strict_types' => true,
+        'fully_qualified_strict_types' => ['phpdoc_tags' => []],
         'function_to_constant' => true,
-        'function_typehint_space' => true,
+        'type_declaration_spaces' => true,
         'heredoc_indentation' => true,
         'heredoc_to_nowdoc' => true,
         'implode_call' => true,
@@ -102,7 +101,7 @@ $config->setRules(
         'native_constant_invocation' => false,
         'native_function_casing' => true,
         'native_function_invocation' => false,
-        'new_with_braces' => true,
+        'new_with_parentheses' => true,
         'no_alternative_syntax' => true,
         'no_binary_string' => true,
         'no_blank_lines_after_class_opening' => true,
@@ -119,14 +118,13 @@ $config->setRules(
         'no_null_property_initialization' => true,
         'no_php4_constructor' => true,
         'no_short_bool_cast' => true,
-        'no_short_echo_tag' => true,
+        'echo_tag_syntax' => ['format' => 'long'],
         'no_singleline_whitespace_before_semicolons' => true,
         'no_spaces_around_offset' => true,
         'no_superfluous_elseif' => true,
-        'no_trailing_comma_in_list_call' => true,
-        'no_trailing_comma_in_singleline_array' => true,
+        'no_trailing_comma_in_singleline' => true,
         'no_unneeded_control_parentheses' => true,
-        'no_unneeded_curly_braces' => true,
+        'no_unneeded_braces' => true,
         'no_unneeded_final_method' => true,
         'no_unreachable_default_argument_value' => true,
         'no_unset_cast' => true,
@@ -155,7 +153,7 @@ $config->setRules(
         'phpdoc_types' => true,
         'pow_to_exponentiation' => true,
         'protected_to_private' => true,
-        'psr4' => true,
+        'psr_autoloading' => true,
         'random_api_migration' => true,
         'return_assignment' => true,
         'return_type_declaration' => true,
@@ -163,7 +161,7 @@ $config->setRules(
         'semicolon_after_instruction' => true,
         'short_scalar_cast' => true,
         'simplified_null_return' => true,
-        'single_blank_line_before_namespace' => true,
+        'blank_lines_before_namespace' => true,
         'single_class_element_per_statement' => true,
         'single_import_per_statement' => true,
         'single_line_after_imports' => true,
@@ -177,7 +175,7 @@ $config->setRules(
         'string_line_ending' => true,
         'ternary_operator_spaces' => true,
         'ternary_to_null_coalescing' => true,
-        'trailing_comma_in_multiline_array' => true,
+        'trailing_comma_in_multiline' => true,
         'unary_operator_spaces' => true,
         'whitespace_after_comma_in_array' => true,
     ]

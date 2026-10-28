@@ -39,7 +39,7 @@ class RedisAdapter implements AdapterInterface
     /**
      * @var \Predis\Client $client
      */
-    private $client;
+    private Client $client;
 
     /**
      * RedisAdapter constructor.
@@ -68,13 +68,7 @@ class RedisAdapter implements AdapterInterface
      */
     public function getAllWorkerIds(): array
     {
-        $workers = $this->client->smembers('workers');
-
-        if (!is_array($workers)) {
-            $workers = [];
-        }
-
-        return $workers;
+        return $this->client->smembers('workers');
     }
 
     /**
@@ -105,7 +99,7 @@ class RedisAdapter implements AdapterInterface
         $this->client->sadd('workers', [$worker]);
         $this->client->set(
             sprintf('worker:%s:started', $worker),
-            strftime('%a %b %d %H:%M:%S %Z %Y')
+            date('D M d H:i:s T Y')
         );
     }
 

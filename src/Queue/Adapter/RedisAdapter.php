@@ -39,7 +39,7 @@ class RedisAdapter implements AdapterInterface
     /**
      * @var \Predis\Client $client
      */
-    private $client;
+    private Client $client;
 
     /**
      * RedisAdapter constructor.
@@ -58,13 +58,7 @@ class RedisAdapter implements AdapterInterface
      */
     public function getAllQueueNames(): array
     {
-        $queues = $this->client->smembers('queue');
-
-        if (!is_array($queues)) {
-            $queues = [];
-        }
-
-        return $queues;
+        return $this->client->smembers('queue');
     }
 
     /**

@@ -38,7 +38,7 @@ class ContainerStrategy implements StrategyInterface
     /**
      * @var \Psr\Container\ContainerInterface $container
      */
-    private $container;
+    private ContainerInterface $container;
 
     /**
      * ContainerStrategy constructor.

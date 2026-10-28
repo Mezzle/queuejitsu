@@ -39,17 +39,17 @@ class WorkerManager
     /**
      * @var \QueueJitsu\Worker\Adapter\AdapterInterface $adapter
      */
-    private $adapter;
+    private AdapterInterface $adapter;
 
     /**
      * @var string|false $hostname
      */
-    private $hostname;
+    private string|false $hostname;
 
     /**
      * @var \Psr\Log\LoggerInterface $log
      */
-    private $log;
+    private LoggerInterface $log;
 
     /**
      * WorkerManager constructor.
@@ -141,7 +141,7 @@ class WorkerManager
      * @param \QueueJitsu\Worker\AbstractWorker $worker
      * @param mixed $data
      */
-    public function setTask(AbstractWorker $worker, $data): void
+    public function setTask(AbstractWorker $worker, mixed $data): void
     {
         $this->adapter->setTask($worker, $data);
     }

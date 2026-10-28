@@ -42,17 +42,12 @@ class Worker extends AbstractWorker
     /**
      * @var \QueueJitsu\Job\JobManager $job_manager
      */
-    protected $job_manager;
+    protected JobManager $job_manager;
 
     /**
      * @var \QueueJitsu\Queue\QueueManager $queue_manager
      */
-    protected $queue_manager;
-
-    /**
-     * @var Job|null $current_job
-     */
-    private $current_job;
+    protected QueueManager $queue_manager;
 
     /**
      * Worker constructor.
@@ -82,16 +77,6 @@ class Worker extends AbstractWorker
     protected function getWorkerIdentifier(): string
     {
         return implode(',', $this->queue_manager->getQueues());
-    }
-
-    /**
-     * finishedWorking
-     */
-    protected function finishedWorking(): void
-    {
-        $this->current_job = null;
-
-        parent::finishedWorking();
     }
 
     /**
@@ -150,12 +135,11 @@ class Worker extends AbstractWorker
         $this->setTask(
             [
                 'queue' => $job->getQueue(),
-                'run_at' => strftime('%a %b %d %H:%M:%S %Z %Y'),
+                'run_at' => date('D M d H:i:s T Y'),
                 'payload' => $job->getPayload(),
             ]
         );
 
-        $this->current_job = $job;
         $job->setWorker($this->getId());
         $this->job_manager->updateStatus($job, JobManager::STATUS_RUNNING);
     }

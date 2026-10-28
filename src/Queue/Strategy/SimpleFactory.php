@@ -44,7 +44,7 @@ class SimpleFactory
      *
      * @return \QueueJitsu\Queue\Strategy\Simple
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): Simple
     {
         $logger_class =
             $container->has(LoggerInterface::class) ? LoggerInterface::class :

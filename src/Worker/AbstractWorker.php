@@ -43,47 +43,47 @@ abstract class AbstractWorker implements EventManagerAwareInterface
     /**
      * @var bool|null|int $child
      */
-    protected $child;
+    protected bool|int|null $child = null;
 
     /**
      * @var bool $finish
      */
-    protected $finish = false;
+    protected bool $finish = false;
 
     /**
      * @var string|false $hostname
      */
-    protected $hostname;
+    protected string|false $hostname;
 
     /**
      * @var string $id
      */
-    protected $id;
+    protected string $id;
 
     /**
      * @var int $interval
      */
-    protected $interval = 5;
+    protected int $interval = 5;
 
     /**
      * @var \Psr\Log\LoggerInterface $log
      */
-    protected $log;
+    protected LoggerInterface $log;
 
     /**
      * @var \QueueJitsu\Worker\WorkerManager $manager
      */
-    protected $manager;
+    protected WorkerManager $manager;
 
     /**
      * @var bool $paused
      */
-    protected $paused = false;
+    protected bool $paused = false;
 
     /**
      * @var string $worker_name
      */
-    protected $worker_name;
+    protected string $worker_name;
 
     /**
      * AbstractWorker constructor.
@@ -104,11 +104,11 @@ abstract class AbstractWorker implements EventManagerAwareInterface
     /**
      * __invoke
      *
-     * @param int $interval
+     * @param int|string $interval
      */
-    public function __invoke($interval = 5): void
+    public function __invoke(int|string $interval = 5): void
     {
-        $this->interval = $interval;
+        $this->interval = (int)$interval;
 
         $this->updateProcLine('Starting');
         $this->startup();
@@ -331,7 +331,7 @@ abstract class AbstractWorker implements EventManagerAwareInterface
      *
      * @return bool|int
      */
-    protected function fork()
+    protected function fork(): bool|int
     {
         if (!function_exists('pcntl_fork')) {
             return false;
@@ -352,7 +352,7 @@ abstract class AbstractWorker implements EventManagerAwareInterface
      *
      * @param mixed $data
      */
-    protected function setTask($data): void
+    protected function setTask(mixed $data): void
     {
         $this->manager->setTask($this, $data);
     }
