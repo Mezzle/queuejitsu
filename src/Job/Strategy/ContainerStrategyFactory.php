@@ -42,7 +42,7 @@ class ContainerStrategyFactory
      *
      * @return \QueueJitsu\Job\Strategy\ContainerStrategy
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): ContainerStrategy
     {
         return new ContainerStrategy($container);
     }

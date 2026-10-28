@@ -1,8 +1,8 @@
 {
   "name": "mez/queuejitsu",
-  "type": "library",
   "description": "A Modern Queueing System",
   "license": "MIT",
+  "type": "library",
   "authors": [
     {
       "name": "Martin Meredith",
@@ -10,52 +10,59 @@
     }
   ],
   "require": {
-    "php": "^7.2 || ^8.0",
+    "php": "^8.2",
     "ext-json": "*",
-    "ext-pcntl": "^7.2",
-    "ext-posix": "^7.2",
-    "laminas/laminas-eventmanager": "^3.2",
-    "predis/predis": "^1.1",
-    "psr/container": "^1.0",
-    "psr/log": "^1.0",
-    "ramsey/uuid": "^3.7 || ^4.0"
+    "ext-pcntl": "*",
+    "ext-posix": "*",
+    "laminas/laminas-eventmanager": "^3.13",
+    "predis/predis": "^3.3",
+    "psr/container": "^1.1 || ^2.0",
+    "psr/log": "^1.1 || ^2.0 || ^3.0",
+    "ramsey/uuid": "^4.7"
   },
   "require-dev": {
-    "ergebnis/composer-normalize": "^2.6",
-    "friendsofphp/php-cs-fixer": "~2",
-    "maglnet/composer-require-checker": "^2.1",
-    "nikic/php-parser": "^4.6",
-    "php-parallel-lint/php-parallel-lint": "^1.2",
-    "phpro/grumphp-shim": "^0.19.0",
-    "phpstan/phpstan": "^0.12.32",
-    "roave/security-advisories": "dev-master",
-    "sensiolabs/security-checker": "^6.0"
+    "ergebnis/composer-normalize": "^2.45",
+    "friendsofphp/php-cs-fixer": "^3.64",
+    "maglnet/composer-require-checker": "^4.7",
+    "phpstan/phpstan": "^2.1"
+  },
+  "conflict": {
+    "psr/http-message": "<1.1"
   },
   "suggest": {
     "ext-pcntl": "Allows Workers to be ran in forked processes",
     "mez/queuejitsu-cli": "Command Line integration",
     "predis/predis": "Connect up to Redis"
   },
-  "config": {
-    "optimize-autoloader": true,
-    "preferred-install": {
-      "stickee/*": "source",
-      "*": "dist"
-    },
-    "sort-packages": true
-  },
-  "extra": {
-    "zf": {
-      "config-provider": "QueueJitsu\\ConfigProvider"
-    }
-  },
   "autoload": {
     "psr-4": {
       "QueueJitsu\\": "src"
     }
   },
+  "config": {
+    "allow-plugins": {
+      "ergebnis/composer-normalize": true
+    },
+    "optimize-autoloader": true,
+    "sort-packages": true
+  },
+  "extra": {
+    "laminas": {
+      "config-provider": "QueueJitsu\\ConfigProvider"
+    }
+  },
   "scripts": {
-    "cs-check": "php-cs-fixer --allow-risky=yes --config=.php_cs --dry-run --verbose fix",
-    "cs-fix": "php-cs-fixer --allow-risky=yes --config=.php_cs --verbose fix"
+    "check": [
+      "@composer validate --strict",
+      "@normalize-check",
+      "@cs-check",
+      "@phpstan",
+      "@require-check"
+    ],
+    "cs-check": "php-cs-fixer check --diff --verbose",
+    "cs-fix": "php-cs-fixer fix --verbose",
+    "normalize-check": "@composer normalize --dry-run --indent-size=2 --indent-style=space",
+    "phpstan": "phpstan analyse",
+    "require-check": "composer-require-checker check composer.json"
   }
 }

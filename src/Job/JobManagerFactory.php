@@ -47,7 +47,7 @@ class JobManagerFactory
      *
      * @return \QueueJitsu\Job\JobManager
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): JobManager
     {
         $logger_class = NullLogger::class;
 

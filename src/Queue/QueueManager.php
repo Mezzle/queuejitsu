@@ -40,17 +40,17 @@ class QueueManager
     /**
      * @var \QueueJitsu\Queue\Adapter\AdapterInterface $adapter
      */
-    private $adapter;
+    private AdapterInterface $adapter;
 
     /**
      * @var string[] $queues
      */
-    private $queues;
+    private array $queues;
 
     /**
      * @var \QueueJitsu\Queue\Strategy\StrategyInterface $strategy
      */
-    private $strategy;
+    private StrategyInterface $strategy;
 
     /**
      * QueueManager constructor.

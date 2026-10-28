@@ -46,33 +46,33 @@ class JobManager implements EventManagerAwareInterface
 {
     use EventManagerAwareTrait;
 
-    const COMPLETED_STATUSES = [
+    public const COMPLETED_STATUSES = [
         self::STATUS_FAILED,
         self::STATUS_COMPLETE,
     ];
 
-    const STATUS_COMPLETE = 4;
+    public const STATUS_COMPLETE = 4;
 
-    const STATUS_FAILED = 3;
+    public const STATUS_FAILED = 3;
 
-    const STATUS_RUNNING = 2;
+    public const STATUS_RUNNING = 2;
 
-    const STATUS_WAITING = 1;
+    public const STATUS_WAITING = 1;
 
     /**
      * @var \QueueJitsu\Job\Adapter\AdapterInterface $adapter
      */
-    private $adapter;
+    private AdapterInterface $adapter;
 
     /**
      * @var \Psr\Log\LoggerInterface $log
      */
-    private $log;
+    private LoggerInterface $log;
 
     /**
      * @var \QueueJitsu\Job\Strategy\StrategyInterface $strategy
      */
-    private $strategy;
+    private StrategyInterface $strategy;
 
     /**
      * JobManager constructor.
@@ -115,7 +115,7 @@ class JobManager implements EventManagerAwareInterface
             if (!$jobInstance instanceof HasTearDown &&
                 method_exists($jobInstance, 'tearDown')) {
                 throw new Deprecated(
-                    'Use of setUp function without \QueueJitsu\Job\HasTearDown Interface is deprecated'
+                    'Use of tearDown function without \QueueJitsu\Job\HasTearDown Interface is deprecated'
                 );
             }
 
@@ -206,7 +206,7 @@ class JobManager implements EventManagerAwareInterface
      *
      * @return array
      */
-    public function getStatus(string $guid)
+    public function getStatus(string $guid): array
     {
         if ($this->adapter instanceof StatusQueryInterface) {
             return $this->adapter->getStatus($guid);

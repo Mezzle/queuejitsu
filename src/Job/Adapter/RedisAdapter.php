@@ -42,7 +42,7 @@ class RedisAdapter implements StatusQueryInterface
     /**
      * @var \Predis\Client $client
      */
-    private $client;
+    private Client $client;
 
     /**
      * RedisAdapter constructor.
@@ -69,7 +69,7 @@ class RedisAdapter implements StatusQueryInterface
         string $queue
     ): void {
         $data = [];
-        $data['failed_at'] = strftime('%a %b %d %H:%M:%S %Z %Y');
+        $data['failed_at'] = date('D M d H:i:s T Y');
         $data['payload'] = $payload;
         $data['exception'] = get_class($exception);
         $data['error'] = $exception->getMessage();
@@ -118,6 +118,10 @@ class RedisAdapter implements StatusQueryInterface
         $key = sprintf('job:%s:status', $guid);
 
         $status_packet = $this->client->get($key);
+
+        if (is_null($status_packet)) {
+            return [];
+        }
 
         return json_decode($status_packet, true);
     }

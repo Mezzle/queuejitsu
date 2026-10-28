@@ -1,11 +1,9 @@
 # QueueJitsu
 [![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors)
 
-[![Build Status](https://travis-ci.org/Mezzle/queuejitsu.svg?branch=master)](https://travis-ci.org/Mezzle/queuejitsu)
-[![Code Climate](https://codeclimate.com/github/Mezzle/queuejitsu/badges/gpa.svg)](https://codeclimate.com/github/Mezzle/queuejitsu)
-[![Test Coverage](https://codeclimate.com/github/Mezzle/queuejitsu/badges/coverage.svg)](https://codeclimate.com/github/Mezzle/queuejitsu/coverage)
+[![CI](https://github.com/Mezzle/queuejitsu/actions/workflows/ci.yml/badge.svg)](https://github.com/Mezzle/queuejitsu/actions/workflows/ci.yml)
 
-QueueJitsu is a queueing system built on the concepts of php-resque-ex, but made to work in a modern environment
+QueueJitsu is a queueing system built on the concepts of php-resque-ex, but made to work in a modern environment. It requires PHP 8.2 or later.
 
 Console integration is provided by [QueueJitsu CLI](https://packagist.org/packages/mez/queuejitsu-cli)
 

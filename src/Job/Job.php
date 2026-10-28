@@ -38,27 +38,27 @@ class Job
     /**
      * @var array $args
      */
-    private $args;
+    private array $args;
 
     /**
      * @var string $class
      */
-    private $class;
+    private string $class;
 
     /**
      * @var string $id
      */
-    private $id;
+    private string $id;
 
     /**
      * @var string $queue
      */
-    private $queue;
+    private string $queue;
 
     /**
      * @var string $worker
      */
-    private $worker;
+    private string $worker;
 
     /**
      * Job constructor.
@@ -74,7 +74,7 @@ class Job
         string $class,
         string $queue,
         array $args = [],
-        string $id = null
+        ?string $id = null
     ) {
         $this->class = $class;
         $this->args = $args;

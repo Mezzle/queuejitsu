@@ -45,7 +45,7 @@ class QueueManagerFactory
      *
      * @return \Closure
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): callable
     {
         $strategy_class =
             $container->has(Strategy::class) ? Strategy::class : Simple::class;

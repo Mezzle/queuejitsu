@@ -45,7 +45,7 @@ class WorkerManagerFactory
      *
      * @return \QueueJitsu\Worker\WorkerManager
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): WorkerManager
     {
         $logger_class =
             $container->has(Logger::class) ? Logger::class : NullLogger::class;

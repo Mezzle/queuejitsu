@@ -40,7 +40,7 @@ class Simple implements StrategyInterface
     /**
      * @var \Psr\Log\LoggerInterface $log
      */
-    private $log;
+    private LoggerInterface $log;
 
     /**
      * Simple constructor.
